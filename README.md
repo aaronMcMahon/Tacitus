@@ -3,20 +3,20 @@ An application to capture your research experience and share it with another or 
 
 ---
 
-#Concepts
+##Concepts
 Research - to go about seeking
 
 Tacit Knowledge - Knowledge that is difficult to verbalize.  We know more than we can tell.
 
 ---
 
-#Statement of Problem
+##Statement of Problem
 
 Conducting research is an experience.  This experience costs you time and effort.  Your reward is knowledge.  Recordinging this hard won knowledge costs you time and effort.  Your reward is managed knowledge, which can be shared with a colleauge or yourself.  Unfortunately, we are inefficient in recording knowledge gained from our research experiences due to time and effort constraints.  If we reduce the time and effort required for recording knowledge, we will realize more value from it.    Let's capture the experience of research in a way that allows others to relive that experience .    
 
 ---
 
-#Model for capturing information during research
+##Model for capturing information during research
 
 All models are wrong, but some models are useful.  A node link model is useful for expressing the research experience.  Tacitus includes three types of nodes:  
 
@@ -38,5 +38,5 @@ The relationships between these nodes are expressed as links. Tacitus includes f
 
 ---
 
-#Application 
+##Application 
 
