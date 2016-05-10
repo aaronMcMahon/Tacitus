@@ -39,4 +39,25 @@ The relationships between these nodes are expressed as links. Tacitus includes f
 ---
 
 ##Application 
+Tacitus was written in C++ using Microsoft Visual Studio 2013
+
+##Build Instructions
+Using Microsoft Visual Studio 2013
+1. Go to File>New>Project
+2. In the New Project window under Templates, select Visual C++>CLR
+3. In the adjacent field, select CLR Empty Project
+4. Name the new project knowledgeForm
+5. Press OK
+6. Close Visual Studio
+7. Copy and paste all files in the Source folder of this repository to your newly created Visual Studio project folder.
+	- the directory should be ...\knowledgeForm\knowledgeForm\
+	- you will be replacing two existing files (knowledgeForm.vcxproj and knowledgeForm.vcxprj.filters)
+8. Restart Visual Studio and open the knowledgeForm project
+9. Press Ctrl+Shft+B to build the solution
+10. Using Windows Explorer, navigate to the folder that contains the newly created knowledgeForm.exe file created in step 9
+11. Copy and paste all files in the Dependencies foler of this repository to the folder opened in step 10
+12. Double click knowledgeFrom.exe to run the program
+
+
+
 
