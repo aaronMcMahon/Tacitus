@@ -379,8 +379,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 	nodeVector.resize(0);
 	std::vector <Edge> edgeVector;
 	edgeVector.resize(0);
-	std::vector <Bubble> bubbleVector;
-	bubbleVector.resize(0);
 
 	//create input file stream variables
 	std::ifstream nodeFile;
@@ -389,17 +387,12 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 	// usefule temporary variables
 	Node tempNode;
 	Edge tempEdge;
-	Bubble bubbleBuffer;
 	std::string tempString;
 	int tempId = 0;
 	float tempX = 0;
 	float tempY = 0;
 	bool nodeActivated = false;
-	bool bubbleActivated = false;
-	bool bubbleNodeActivated = false;
 	int activeNode = 0;
-	int activeBubbleNode = 0;
-	int activeBubble = 0;
 	bool done = false; //used for exiting "game loop"
 	std::string nodeFileName;
 	std::string edgeFileName;
@@ -510,7 +503,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 	drawBackground(translateX, translateY);
 	drawEdges(nodeVector, edgeVector, translateX, translateY);
 	drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-	drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 	drawMenu(0);
 	al_flip_display();
 
@@ -560,7 +552,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				al_draw_text(font, FONT_COLOR, 0, 0, 0, panMessage);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
 				while (events.keyboard.keycode != ALLEGRO_KEY_ESCAPE && events.type != ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) al_wait_for_event(event_queue, &events);//wait for esc to cancel or mouse button to insert new node
 
@@ -576,7 +567,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					drawEdges(nodeVector, edgeVector, translateX, translateY);
 					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 					drawMenu(0);
-					drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 					al_flip_display();
 					break;
 				}
@@ -589,26 +579,8 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				drawMenu(0);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
 				//drawMenu(4);
-				break;
-			case ALLEGRO_KEY_B:
-				while (events.keyboard.keycode != ALLEGRO_KEY_ESCAPE && events.type != ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) al_wait_for_event(event_queue, &events);//wait for esc to cancel or mouse button to insert new node
-				if (events.mouse.button & 1)
-				{
-					bubbleBuffer = addBubble(events.mouse.x, events.mouse.y, translateX, translateY, bubbleVector);
-					bubbleVector.push_back(bubbleBuffer);
-				}
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				al_draw_text(font, FONT_COLOR, 0, 0, 0, exportMessage);
-				//redrawNodesEdges(nodeVector, edgeVector);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
-				al_flip_display();
 				break;
 			case ALLEGRO_KEY_LCTRL:
 				al_clear_to_color(WINDOW_COLOR);
@@ -618,7 +590,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				drawMenu(0);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
 				nodeVector = moveChildren(nodeVector, edgeVector, event_queue, events, translateX, translateY);
 				al_clear_to_color(WINDOW_COLOR);
@@ -627,7 +598,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				drawMenu(0);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
 				//drawMenu(3);
 				break;
@@ -639,7 +609,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				drawMenu(0);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
 				//drawMenu(1);
 				//set temp node text fields
@@ -660,7 +629,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					drawEdges(nodeVector, edgeVector, translateX, translateY);
 					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 					drawMenu(0);
-					drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 					al_flip_display();
 				}
 				break;
@@ -673,7 +641,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				drawMenu(0);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
 				nodeVector = deleteNode(nodeVector, edgeVector, event_queue, events, translateX, translateY);
 				al_clear_to_color(WINDOW_COLOR);
@@ -682,7 +649,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				drawMenu(0);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
 				//drawMenu(3);
 				break;
@@ -694,7 +660,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				drawMenu(0);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
 				edgeVector = deleteEdge(nodeVector, edgeVector, event_queue, events, translateX, translateY);
 				al_clear_to_color(WINDOW_COLOR);
@@ -703,7 +668,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				drawMenu(0);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
 				//drawMenu(3);
 				break;
@@ -714,7 +678,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				al_draw_text(font, FONT_COLOR, 0, 0, 0, panMessage);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
 
 				translateY -= WINDOW_Y/4;
@@ -724,7 +687,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				drawMenu(0);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
 				break;
 
@@ -734,7 +696,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				al_draw_text(font, FONT_COLOR, 0, 0, 0, panMessage);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
 
 				translateY += WINDOW_Y / 4;
@@ -744,7 +705,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				drawMenu(0);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
 				break;
 
@@ -754,7 +714,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				al_draw_text(font, FONT_COLOR, 0, 0, 0, panMessage);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
 
 				translateX -= WINDOW_Y / 4;
@@ -765,7 +724,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				drawMenu(0);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
 				break;
 
@@ -775,7 +733,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				al_draw_text(font, FONT_COLOR, 0, 0, 0, panMessage);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
 
 				translateX += WINDOW_Y / 4;
@@ -785,35 +742,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				drawMenu(0);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
-				break;
-			case ALLEGRO_KEY_R:
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				al_draw_text(font, FONT_COLOR, 0, 0, 0, addEdgeMessage);
-				//redrawNodesEdges(nodeVector, edgeVector);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
-				al_flip_display();
-				//drawMenu(2);
-				al_unregister_event_source(event_queue, al_get_keyboard_event_source());
-				if (events.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
-				{
-					tempX = events.mouse.x + translateX;
-					tempY = events.mouse.y + translateY;
-					//establish if mouse button down occurs when cursor is within a bubble
-					for (int i = 0; i < bubbleVector.size(); i++) //iterate through bubble vector
-					{
-						if (tempX > bubbleVector[i].minX && tempX < bubbleVector[i].maxX && tempY > bubbleVector[i].minY && tempY < bubbleVector[i].maxY)
-						{
-							bubbleActivated = true;
-							activeBubble = i;
-						}
-					}
-				}
 				break;
 
 			case ALLEGRO_KEY_E:
@@ -824,7 +753,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				drawMenu(0);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
 				//drawMenu(2);
 				al_unregister_event_source(event_queue, al_get_keyboard_event_source());
@@ -835,7 +763,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				drawMenu(0);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
 				al_clear_to_color(WINDOW_COLOR);
 				drawBackground(translateX, translateY);
@@ -850,7 +777,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				drawMenu(0);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 				al_flip_display();
 				break;
 			}
@@ -862,7 +788,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 			drawBackground(translateX, translateY);
 			drawEdges(nodeVector, edgeVector, translateX, translateY);
 			drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-			drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
 			al_flip_display();
 
 			if (events.mouse.button & 1) //record coordinates of cursor upon clicking mouse button 1
@@ -885,91 +810,30 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 		{
 			tempX = events.mouse.x + translateX;
 			tempY = events.mouse.y + translateY;
-			//establish if mouse button release occurs when cursor is within a bubble
-			for (int i = 0; i < bubbleVector.size(); i++) //iterate through bubble vector
-			{
-				if (tempX > bubbleVector[i].minX && tempX < bubbleVector[i].maxX && tempY > bubbleVector[i].minY && tempY < bubbleVector[i].maxY)
-				{
-					bubbleActivated = true;
-					activeBubble = i;
-				}
-			}
 			
-			if (bubbleActivated) //if bubble activated, then add node to bubble
-			{
-				char const * nodeType = nodeVector[activeNode].type.c_str();
-				char const * nodeNickname = nodeVector[activeNode].nickname.c_str();
-				char const * nodeDescription = nodeVector[activeNode].description.c_str();
-				nodeActivated = false;
-				tempNode = nodeVector[activeNode];
-				tempNode.x = bubbleVector[activeBubble].minX;
-				tempNode.y = bubbleVector[activeBubble].minY + 1.5 * NODE_HEIGHT * bubbleVector[activeBubble].nodeVector.size();
+			char const * nodeType = nodeVector[activeNode].type.c_str();
+			char const * nodeNickname = nodeVector[activeNode].nickname.c_str();
+			char const * nodeDescription = nodeVector[activeNode].description.c_str();
+			nodeVector[activeNode].x = events.mouse.x + translateX - NODE_WIDTH / 2;
+			nodeVector[activeNode].y = events.mouse.y + translateY - NODE_HEIGHT / 2;
+			nodeActivated = false;
+			al_clear_to_color(WINDOW_COLOR); //redraw screen
+			drawBackground(translateX, translateY);
+			al_draw_text(font, FONT_COLOR, FONT_SIZE, 0, 0, &nodeType[0]);
+			al_draw_text(font, FONT_COLOR, FONT_SIZE, 1 * FONT_SIZE, 0, &nodeNickname[0]);
+			al_draw_text(font, FONT_COLOR, FONT_SIZE, 2 * FONT_SIZE, 0, &nodeDescription[0]);
 
-				bubbleVector[activeBubble].nodeVector.push_back(tempNode);
-				bubbleVector[activeBubble].maxY += 1.5 * NODE_HEIGHT;
+			//redrawNodesEdges(nodeVector, edgeVector);
+			drawEdges(nodeVector, edgeVector, translateX, translateY);
+			drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
+			highlightRelatives(activeNode, edgeVector, nodeVector, translateX, translateY);
+			drawMenu(0);
+			al_flip_display();
 
-				bubbleNodeActivated = false;
-				bubbleActivated = false;
-				al_clear_to_color(WINDOW_COLOR); //redraw screen
-				drawBackground(translateX, translateY);
-				al_draw_text(font, FONT_COLOR, FONT_SIZE, 0, 0, &nodeType[0]);
-				al_draw_text(font, FONT_COLOR, FONT_SIZE, 1 * FONT_SIZE, 0, &nodeNickname[0]);
-				al_draw_text(font, FONT_COLOR, FONT_SIZE, 2 * FONT_SIZE, 0, &nodeDescription[0]);
-
-				//redrawNodesEdges(nodeVector, edgeVector);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				highlightRelatives(activeNode, edgeVector, nodeVector, translateX, translateY);
-				drawMenu(0);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
-				al_flip_display();
-
-				webBrowser1->Navigate(context.marshal_as<System::String ^>(bubbleVector[activeBubble].nodeVector[activeBubbleNode].fileLocation));
-				addressBox->Text = context.marshal_as<System::String ^>(bubbleVector[activeBubble].nodeVector[activeBubbleNode].fileLocation);
-			}
-			else
-			{
-				char const * nodeType = nodeVector[activeNode].type.c_str();
-				char const * nodeNickname = nodeVector[activeNode].nickname.c_str();
-				char const * nodeDescription = nodeVector[activeNode].description.c_str();
-				nodeVector[activeNode].x = events.mouse.x + translateX - NODE_WIDTH / 2;
-				nodeVector[activeNode].y = events.mouse.y + translateY - NODE_HEIGHT / 2;
-				nodeActivated = false;
-				al_clear_to_color(WINDOW_COLOR); //redraw screen
-				drawBackground(translateX, translateY);
-				al_draw_text(font, FONT_COLOR, FONT_SIZE, 0, 0, &nodeType[0]);
-				al_draw_text(font, FONT_COLOR, FONT_SIZE, 1 * FONT_SIZE, 0, &nodeNickname[0]);
-				al_draw_text(font, FONT_COLOR, FONT_SIZE, 2 * FONT_SIZE, 0, &nodeDescription[0]);
-
-				//redrawNodesEdges(nodeVector, edgeVector);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				highlightRelatives(activeNode, edgeVector, nodeVector, translateX, translateY);
-				drawMenu(0);
-				drawBubbles(nodeVector, subFont, edgeVector, translateX, translateY, bubbleVector);
-				al_flip_display();
-
-				webBrowser1->Navigate(context.marshal_as<System::String ^>(nodeVector[activeNode].fileLocation));
-				addressBox->Text = context.marshal_as<System::String ^>(nodeVector[activeNode].fileLocation);
-			}
+			webBrowser1->Navigate(context.marshal_as<System::String ^>(nodeVector[activeNode].fileLocation));
+			addressBox->Text = context.marshal_as<System::String ^>(nodeVector[activeNode].fileLocation);
 		}
 
-		//if (events.type == ALLEGRO_EVENT_MOUSE_AXES)
-		//{
-		//	if (events.mouse.z > zoom)
-		//	{
-		//		zoomScalar++;
-		//		if (zoomScalar > ZOOM_MAX) zoomScalar = ZOOM_MAX;
-		//		al_clear_to_color(WINDOW_COLOR); //redraw screen
-		//		drawBackground(translateX, translateY);
-		//		//redrawNodesEdges(nodeVector, edgeVector);
-		//		drawEdges(nodeVector, edgeVector, translateX, translateY);
-		//		drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-		//		highlightRelatives(activeNode, edgeVector, nodeVector);
-		//		drawMenu(0);
-		//		al_flip_display();
-		//	}
-		//}
 
 		if (events.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
 		{

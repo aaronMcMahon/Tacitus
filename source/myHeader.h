@@ -60,16 +60,8 @@ public:
 	std::string parentName, childName;
 };
 
-class Bubble
-{
-public:
-	int minX, minY, maxX, maxY, id;
-	std::vector<Node> nodeVector;
-};
-
 void drawEdges(std::vector<Node> tempNodeVector, std::vector<Edge> tempEdgeVector,int translateX, int translateY);
 void drawNodes(std::vector<Node> tempNodeVector, ALLEGRO_FONT *subFont, std::vector<Edge> tempEdgeVector, int translateX, int translateY);
-std::vector<Node> RearrangeDiagram(std::vector<Node> &tempNodeVector, std::vector<Edge> &tempEdgeVector);
 void ExportNodesEdges(std::vector<Node>, std::vector<Edge>, std::string nodeFileName, std::string edgeFileName);
 void redrawNodesEdges(std::vector<Node> nodeVector, std::vector<Edge> edgeVector);
 Node addNode(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, ALLEGRO_FONT *font, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, Node tempNode, int translateX, int translateY);
@@ -83,5 +75,3 @@ void drawBackground(int translateX, int translateY);
 void populateListNodeVector(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, std::vector<Node> &listNodeVector);
 void drawListDividers();
 void populateInterrogateNodeVector(std::vector<Node> &interrogateNodeVector, std::vector<Node> listNodeVector, std::vector<Edge> &edgeVector, int activeNode);
-Bubble addBubble(int mouseX, int mouseY, int translateX, int translateY, std::vector<Bubble> bubbleVector);
-void drawBubbles(std::vector<Node> tempNodeVector, ALLEGRO_FONT *subFont, std::vector<Edge> tempEdgeVector, int translateX, int translateY, std::vector<Bubble> bubbleVector);

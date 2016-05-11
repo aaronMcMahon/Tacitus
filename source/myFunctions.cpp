@@ -2,7 +2,15 @@
 
 void drawEdges(std::vector<Node> tempNodeVector, std::vector<Edge> tempEdgeVector, int translateX, int translateY)
 {
-	translateX = -translateX;
+/*
+Give this function:
+     - the node data
+     - the edge data
+     - how far the user has already panned the image in the x and y direction
+And it will:
+    - draw the edges on the map
+*/
+    translateX = -translateX;
 	translateY = -translateY;
 	int tempParentId = 0, tempChildId = 0, parentNodeAddress = 0, childNodeAddress = 0;
 	float edgeLength, xParentScaled, yParentScaled, xChildScaled, yChildScaled, xParentRotated, yParentRotated, xChildRotated, yChildRotated, xParentTranslated, yParentTranslated, xChildTranslated, yChildTranslated, deltaX, deltaY;
@@ -46,7 +54,17 @@ void drawEdges(std::vector<Node> tempNodeVector, std::vector<Edge> tempEdgeVecto
 
 void drawNodes(std::vector<Node> tempNodeVector, ALLEGRO_FONT *subFont, std::vector<Edge> tempEdgeVector, int translateX, int translateY)
 {
-	translateX = -translateX;
+/*
+Give this function:
+     - the node data
+     - font for the text
+     - the edge data
+     - how far the user has already panned the image in the x and y direction
+And it will:
+    - draw nodes as colored boxes on the map
+    - label those nodes using their nick name
+*/	
+    translateX = -translateX;
 	translateY = -translateY;
 	//ALLEGRO_FONT *subFont = al_load_font(FONT_TYPE, NODE_WIDTH, NULL); //create a font for Allegro Display
 	for (int i = 0; i < tempNodeVector.size(); i++)
@@ -54,7 +72,7 @@ void drawNodes(std::vector<Node> tempNodeVector, ALLEGRO_FONT *subFont, std::vec
 		
 		char const * nodeNickname = tempNodeVector[i].nickname.c_str();
 		
-		if (tempNodeVector[i].type == "Document" || tempNodeVector[i].type == "Data")
+		if (tempNodeVector[i].type == "Document")
 		{
 			int children = 0;
 			//count children
@@ -122,6 +140,15 @@ void drawNodes(std::vector<Node> tempNodeVector, ALLEGRO_FONT *subFont, std::vec
 
 void ExportNodesEdges(std::vector<Node> tempNodeVector, std::vector<Edge> tempEdgeVector, std::string nodeFileName, std::string edgeFileName)
 {
+/*
+Give this function:
+     - the node data
+     - the edge data
+     - the text file where node data saved
+     - the text file where edge data saved
+And it will:
+    - overwrite the text files with updated data
+*/	
 	if (tempNodeVector.size() > 0)
 	{
 		std::ofstream nodeOutput;
@@ -151,6 +178,19 @@ void ExportNodesEdges(std::vector<Node> tempNodeVector, std::vector<Edge> tempEd
 
 Node addNode(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, ALLEGRO_FONT *font, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, Node tempNode, int translateX, int translateY)
 {
+/*
+Give this function:
+     - the node data     
+     - the edge data
+     - font for the text
+     - an event queue that the Allegro library understands
+     - an event that the Allegro library understands
+     - the data for a single node to be added
+     - how far the user has already panned the image in the x and y direction
+And it will:
+    - return the data for the newly defined node
+
+*/	
 	tempNode.x = events.mouse.x + translateX;
 	tempNode.y = events.mouse.y + translateY;
 
@@ -161,6 +201,21 @@ Node addNode(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, ALLEG
 
 Edge addEdge(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, ALLEGRO_FONT * subFont, int translateX, int translateY)
 {
+/*
+Give this function:
+     - the node data     
+     - the edge data
+     - an event queue that the Allegro library understands
+     - an event that the Allegro library understands
+     - font for the text    
+     - the data for a single node to be added
+     - how far the user has already panned the image in the x and y direction
+And it will:
+    - wait for the user to click and drag between nodes to define an edge
+    - check that the edge actually connects two nodes
+    - return the data for the newly defined edge, if it is valid
+*/
+
 	int validEdge = 0;
 	Edge tempEdge; //temporary edge object that will be added to vector of edges
 
@@ -223,6 +278,19 @@ Edge addEdge(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, ALLEG
 
 std::vector<Node> moveChildren(std::vector<Node> nodeVector, std::vector<Edge> edgeVector, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, int translateX, int translateY)
 {	
+/*
+Give this function:
+     - the node data     
+     - the edge data
+     - font for the text
+     - an event queue that the Allegro library understands
+     - an event that the Allegro library understands
+     - the data for a single node to be added
+     - how far the user has already panned the image in the x and y direction
+And it will:
+    - change the location of a node and its children nodes on the map based on click-drag-release input from the user's mouse
+
+*/
 	int tempX, tempY, deltaX, deltaY; //integers to store coordinates of selected node and desired movement
 	bool nodeActivated = false;
 	std::vector<int> selectedNodes; //vector for storing id's of nodes to be moved
@@ -285,106 +353,18 @@ std::vector<Node> moveChildren(std::vector<Node> nodeVector, std::vector<Edge> e
 	return nodeVector;
 }
 
-std::vector<Node> RearrangeDiagram(std::vector<Node> &tempNodeVector, std::vector<Edge> &tempEdgeVector)
-{
-	//tempNodeVector[0].x = 1;
-	//tempNodeVector[0].y = 1;
-
-	float N = tempNodeVector.size() - 1; //count nodes
-	for (int i = 0; i < N; i++)
-	{
-		tempNodeVector[i].forceX = 0;
-		tempNodeVector[i].forceY = 0;
-	}
-	//cout << "for(int i = 0; i < N; i++) exited" << endl;
-
-	for (int iteration = 1; iteration < ITERATION_LIMIT; iteration++)
-	{
-		for (int i1 = 0; i1 < N - 1; i1++)
-		{
-			Node node1 = tempNodeVector[i1];
-			for (int i2 = i1 + 1; i2 < N; i2++)
-			{
-				Node node2 = tempNodeVector[i2];
-				float dx = node2.x - node1.x;
-				float dy = node2.y - node1.y;
-				if (dx != 0 || dy != 0)
-				{
-					float distanceSquared = dx*dx + dy*dy;
-					float distance = sqrt(distanceSquared);
-					float force = REPULSION_CONSTANT / distanceSquared;
-					float fx = force * dx / distance;
-					float fy = force * dy / distance;
-					node1.forceX = node1.forceX - fx;
-					node1.forceY = node1.forceY - fy;
-					node2.forceX = node2.forceX + fx;
-					node2.forceY = node2.forceY + fy;
-				}
-
-				tempNodeVector[i2].forceX = node2.forceX;
-				tempNodeVector[i2].forceY = node2.forceY;
-			}
-
-			tempNodeVector[i1].forceX = node1.forceX;
-			tempNodeVector[i1].forceY = node1.forceY;
-		}
-		for (int i1 = 0; i1 < tempEdgeVector.size(); i1++)
-		{
-			int size = tempEdgeVector.size();
-			Node node1;
-			node1 = tempNodeVector[tempEdgeVector[i1].parent];
-			Node node2;
-			node2 = tempNodeVector[tempEdgeVector[i1].child];
-			for (int j = 0; j < tempEdgeVector.size(); j++)
-			{
-				float dx = node2.x - node1.x;
-				float dy = node2.y - node1.y;
-
-				if (dx != 0 || dy != 0)
-				{
-					float distance = sqrt(dx*dx + dy*dy);
-					float force = SPRING_CONSTANT * (distance - SPRING_REST_LENGTH);
-					float fx = force * dx / distance;
-					float fy = force * dy / distance;
-					node1.forceX = node1.forceX + fx;
-					node1.forceY = node1.forceY + fy;
-					node2.forceX = node2.forceX - fx;
-					node2.forceY = node2.forceY - fy;
-				}
-
-				tempNodeVector[tempEdgeVector[i1].child].forceX = node2.forceX;
-				tempNodeVector[tempEdgeVector[i1].child].forceY = node2.forceY;
-			}
-
-			tempNodeVector[tempEdgeVector[i1].parent].forceX = node1.forceX;
-			tempNodeVector[tempEdgeVector[i1].parent].forceY = node1.forceY;
-		}
-		for (int i = 0; i < N; i++)
-		{
-			Node node = tempNodeVector[i];
-			float dx = DELTA_TIME * ITERATION_LIMIT / iteration * node.forceX;
-			float dy = DELTA_TIME * ITERATION_LIMIT / iteration * node.forceY;
-			float displacementSquared = dx*dx + dy*dy;
-			if (displacementSquared > MAX_DISPLACEMENT_SQUARED)
-			{
-				float s = sqrt(MAX_DISPLACEMENT_SQUARED / displacementSquared);
-				dx = dx * s;
-				dy = dy * s;
-			}
-			node.x = node.x + dx;
-			node.y = node.y + dy;
-			tempNodeVector[i].x = node.x;
-			tempNodeVector[i].y = node.y;
-
-		}
-
-	}
-	return tempNodeVector;
-};
-
 void drawMenu(int i)
 {
-	ALLEGRO_FONT *menuFont = al_load_font(FONT_TYPE, FONT_SIZE, NULL); //create a font for Allegro Display
+/*
+Give this function:
+     - integer value of zero*
+And it will:
+    - draw a list of key commands to the map
+*I had a clever idea about using an integer to alter the list of commands, but gave up on it.  I never got around to dropping this functions requirement for an integer parameter
+
+*/	
+    
+    ALLEGRO_FONT *menuFont = al_load_font(FONT_TYPE, FONT_SIZE, NULL); //create a font for Allegro Display
 	int j = 0;
 	const char * nKey = "Add Node = N";
 	const char * eKey = "Add Edge = E";
@@ -433,6 +413,19 @@ void drawMenu(int i)
 
 std::vector<Node> deleteNode(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, int translateX, int translateY)
 {
+/*
+Give this function:
+     - the node data     
+     - the edge data
+     - an event queue that the Allegro library understands
+     - an event that the Allegro library understands
+     - how far the user has already panned the image in the x and y direction
+And it will:
+    - check to see if the user just clicked a node on the map
+    - if so, that node gets deleted from the node data
+
+*/
+
 	int tempX, tempY, deltaX, deltaY; //integers to store coordinates of selected node and desired movement
 	bool nodeActivated = false;
 	int selectedNode; //vector for storing id's of nodes to be moved
@@ -482,7 +475,20 @@ std::vector<Node> deleteNode(std::vector<Node> &nodeVector, std::vector<Edge> &e
 
 std::vector<Edge> deleteEdge(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, int translateX, int translateY)
 {
-	//bool validEdge = false;
+/*
+Give this function:
+     - the node data     
+     - the edge data
+     - an event queue that the Allegro library understands
+     - an event that the Allegro library understands
+     - the data for a single node to be added
+     - how far the user has already panned the image in the x and y direction
+And it will:
+    - check if the user clicks on a node, drags to another node and releases the mouse button
+    - if that was done and edge will be created and added to the edge data
+
+*/
+
 	Edge tempEdge; //temporary edge object that will be deleted from vector of edges
 
 	//wait for mouse button input
@@ -537,6 +543,19 @@ std::vector<Edge> deleteEdge(std::vector<Node> &nodeVector, std::vector<Edge> &e
 }
 void highlightRelatives(int &activeNode, std::vector<Edge> &edgeVector, std::vector<Node> &nodeVector, int translateX, int translateY)
 {
+/*
+Give this function:
+     - data for one node (the active node)
+     - the node data    
+     - the edge data
+     - font for the text
+     - how far the user has already panned the image in the x and y direction
+And it will:
+    - draw a black boundary around all parent nodes of the active node
+    - draw a yellow boundary around all child nodes of the active node
+
+*/
+
 	for (int i = 0; i < edgeVector.size(); i++)
 	{
 		if (edgeVector[i].parent == nodeVector[activeNode].id)
@@ -557,7 +576,13 @@ void highlightRelatives(int &activeNode, std::vector<Edge> &edgeVector, std::vec
 }
 void drawBackground(int translateX, int translateY)
 {
-	translateX = -translateX;
+/*
+Give this function:
+     - how far the user has already panned the image in the x and y direction
+And it will:
+    - draw a series of concentric circles to the map
+
+*/	translateX = -translateX;
 	translateY = -translateY;
 	float maxRadius = WINDOW_X * WINDOW_X + WINDOW_Y * WINDOW_Y;
 	maxRadius = sqrt(maxRadius);
@@ -578,6 +603,21 @@ void drawBackground(int translateX, int translateY)
 }
 void populateListNodeVector(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, std::vector<Node> &listNodeVector)
 {
+/*
+Give this function:
+     - the node data     
+     - the edge data
+     - font for the text
+     - an event queue that the Allegro library understands
+     - an event that the Allegro library understands
+     - the data for a single node to be added
+     - how far the user has already panned the image in the x and y direction
+And it will:
+    - draw nodes in three lists based on type
+	- nodes that have children will be drawn at the top, followed by nodes without children
+
+*/
+
 	int x = NODE_HEIGHT;
 	int y = NODE_HEIGHT;
 	int children = 0;
@@ -689,12 +729,30 @@ void populateListNodeVector(std::vector<Node> &nodeVector, std::vector<Edge> &ed
 }
 void drawListDividers()
 {
+/*
+Give this function:
+- no parameters
+And it will:
+- draw lines across the List View window
+
+*/
 	al_draw_line(WINDOW_X / 2, 0, WINDOW_X / 2, WINDOW_Y, DIVIDER_COLOR, DIVIDER_THICKNESS);
 	al_draw_line(WINDOW_X / 2, WINDOW_Y / 2 - FONT_SIZE * 3, WINDOW_X, WINDOW_Y / 2 - FONT_SIZE * 3, DIVIDER_COLOR, DIVIDER_THICKNESS);
 	al_draw_line(WINDOW_X / 2, WINDOW_Y / 2 + FONT_SIZE * 3, WINDOW_X, WINDOW_Y / 2 + FONT_SIZE * 3, DIVIDER_COLOR, DIVIDER_THICKNESS);
 }
 void populateInterrogateNodeVector(std::vector<Node> &interrogateNodeVector, std::vector<Node> listNodeVector, std::vector<Edge> &edgeVector, int activeNode)
 {
+/*
+Give this function:
+- an empty vector to store node data
+- the node data
+- the edge data
+- the location of a desired node within the node data
+And it will:
+- draw a duplicate of the desired node at the right/center of the List View window
+- draw a duplicate of the desired nodes parent nodes at the right/top of the List View window
+- draw a duplicate of the desired nodes child nodes at the right/bottom of the List View window
+*/
 	interrogateNodeVector.resize(0); //empty node vector
 	Node nodeBuffer;// Node buffer
 	nodeBuffer = listNodeVector[activeNode]; //active node passed into function goes into Node buffer
@@ -758,29 +816,5 @@ void populateInterrogateNodeVector(std::vector<Node> &interrogateNodeVector, std
 				}
 			}
 		}
-	}
-}
-Bubble addBubble(int mouseX, int mouseY, int translateX, int translateY, std::vector<Bubble> bubbleVector)
-{
-	int id = 0;
-	Bubble bubbleBuffer;
-	for (int i = 0; i < bubbleVector.size(); i++)
-	{
-		if (bubbleVector[i].id > id) id = bubbleVector[i].id;
-	}
-	bubbleBuffer.id = id + 1;
-	bubbleBuffer.minX = mouseX + translateX;
-	bubbleBuffer.minY = mouseY + translateY;
-	bubbleBuffer.maxX = bubbleBuffer.minX + FONT_SIZE * 20;
-	bubbleBuffer.maxY = bubbleBuffer.minY + 2 * NODE_HEIGHT;
-
-	return bubbleBuffer;
-}
-void drawBubbles(std::vector<Node> tempNodeVector, ALLEGRO_FONT *subFont, std::vector<Edge> tempEdgeVector, int translateX, int translateY, std::vector<Bubble> bubbleVector)
-{
-	for (int i = 0; i < bubbleVector.size(); i++)
-	{
-		al_draw_rectangle(bubbleVector[i].minX - translateX, bubbleVector[i].minY - translateY, bubbleVector[i].maxX - translateX, bubbleVector[i].maxY - translateY, DIVIDER_COLOR, DIVIDER_THICKNESS);
-		drawNodes(bubbleVector[i].nodeVector, subFont, tempEdgeVector, translateX, translateY);
 	}
 }
