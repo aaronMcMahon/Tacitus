@@ -43,7 +43,7 @@ The relationships between these nodes are expressed as links. There are four typ
 ##The Application 
 Tacitus was designed around the conceptual model described above.  It allows the user to easily capture pieces of the system as they arise.  Additionally, it graphically displays the system (either as lists or a network).  These displays are interactive, such that the user can interrogate the system to a level of detail that is appropriate for the user.
 
-Tacitus was written in C++ using Microsoft Visual Studio 2013's Windows Form Template.
+Tacitus was written in C++ using Microsoft Visual Studio 2013's Windows Form Template. It makes heavy use of Allegro 5, an open source gaming library (https://github.com/liballeg/allegro5).
 
 ##Build Instructions
 
@@ -76,6 +76,8 @@ Using Microsoft Visual Studio 2013
 11. Copy and paste all files in the *dependencies* foler of this repository to the folder opened in step 10
 
 12. Double click *knowledgeFrom.exe* to run the program
+
+13. Look at the [User's Guide] (https://github.com/aaronMcMahon/Tacitus/wiki/Users-Guide)
 
 ---
 
