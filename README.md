@@ -1,7 +1,7 @@
 # Tacitus
 Increase your capacity for creative problem solving by unburdening your brain of the effortful and mundane task of record keeping.
 
-Tacitus is an aplication that facilitates a unique approach to knowledge management.  It allows you to keep track of:
+Tacitus is an application that facilitates a unique approach to knowledge management.  It allows you to keep track of:
 
 1. What you did
 2. Why you did it
@@ -26,11 +26,11 @@ I propose to model the research experience as a system of nodes and links.  This
 
 2. Actions - A small piece of work a researcher undertakes
 
-3. Observations - a concise statment describing a key observation made by a resercher
+3. Observations - a concise statement describing a key observation made by a researcher
 
 The relationships between these nodes are expressed as links. There are four types of links:
 
-1. Action yields Document - In conducting an Action, the researcher produces a Document (e.g. web search (Action) yields a wikipedia page (Document))
+1. Action yields Document - In conducting an Action, the researcher produces a Document (e.g. web search (Action) yields a Wikipedia page (Document))
 
 2. Action yields Observation - In conducting an Action, the researcher produces an Observation (e.g. statistical analysis (Action) yields "I think the results are biased" (Observation))
 
@@ -80,7 +80,7 @@ Using Microsoft Visual Studio 2013
 
 10. Using Windows Explorer, navigate to the folder that contains the newly created *knowledgeForm.exe* file created in step 9
 
-11. Copy and paste all files in the *dependencies* foler of this repository to the folder opened in step 10
+11. Copy and paste all files in the *dependencies* folder of this repository to the folder opened in step 10
 
 12. Double click *knowledgeFrom.exe* to run the program
 
@@ -90,6 +90,4 @@ Using Microsoft Visual Studio 2013
 
 ##About the Author
 I am not a professional software developer.  I learned quite a bit from people on YouTube (especially *Jaime King*, *CodingMadeEasy*, and *What's a Creel?*).  With what I've learned, I am able to use these limited computer programming skills to solve real problems I have at work and home. I find it to be one of the most fulfilling experiences of my life.  I put Tacitus together about a year ago to help me keep my thoughts organized at work and am absolutely killing it.  I think Tacitus could be a lot better and am hoping to enlist the help of others to use and improve it.
-
-
 
