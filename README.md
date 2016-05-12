@@ -45,6 +45,13 @@ Tacitus was designed around the conceptual model described above.  It allows the
 
 Tacitus was written in C++ using Microsoft Visual Studio 2013's Windows Form Template. It makes heavy use of Allegro 5, an open source gaming library (https://github.com/liballeg/allegro5).
 
+---
+
+##Questions, Comments, Concerns
+Visit the [forum] (https://groups.google.com/forum/#!forum/tacitusopensource)
+
+---
+
 ##Build Instructions
 
 Using Microsoft Visual Studio 2013
@@ -81,7 +88,7 @@ Using Microsoft Visual Studio 2013
 
 ---
 
-###About the Author
+##About the Author
 I am not a professional software developer.  I learned quite a bit from people on YouTube (especially *Jaime King*, *CodingMadeEasy*, and *What's a Creel?*).  With what I've learned, I am able to use these limited computer programming skills to solve real problems I have at work and home. I find it to be one of the most fulfilling experiences of my life.  I put Tacitus together about a year ago to help me keep my thoughts organized at work and am absolutely killing it.  I think Tacitus could be a lot better and am hoping to enlist the help of others to use and improve it.
 
 
