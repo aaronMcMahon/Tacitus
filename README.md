@@ -1,24 +1,26 @@
 # Tacitus
-An application to capture your research experience and share it with another or your future self.
+Increase your capacity for creative problem solving by unburdening your brain of the effortful and mundane task of record keeping.
 
----
+Tacitus is an aplication that facilitates a unique approach to knowledge management.  It allows you to keep track of:
 
-##Concepts
-Research - to go about seeking
-
-Tacit Knowledge - Knowledge that is difficult to verbalize.  We know more than we can tell.
+1. What you did
+2. Why you did it
+3. What you used 
+3. What you produced
+4. What you thought
+5. How all that relates to what you did next   
 
 ---
 
 ##Statement of Problem
 
-Conducting research is an experience.  This experience costs you time and effort.  Your reward is knowledge.  Recordinging this hard won knowledge costs you time and effort.  Your reward is managed knowledge, which can be shared with a colleauge or yourself.  Unfortunately, we are inefficient in recording knowledge gained from our research experiences due to time and effort constraints.  If we reduce the time and effort required for recording knowledge, we will realize more value from it.    Let's capture the experience of research in a way that allows others to relive that experience .    
+Recording knowledge gained is too hard and too slow.  Using recorded knowledge is too hard and too slow. We need a unique way of thinking about knowledge (a model) and a tool for using that knowledge (an application) that makes things easier and faster. 
 
 ---
 
-##Model for capturing information during research
+##The Model
 
-All models are wrong, but some models are useful.  A node link model is useful for expressing the research experience.  Tacitus includes three types of nodes:  
+I propose to model the research experience as a system of nodes and links.  This system includes three types of nodes:  
 
 1. Documents - reports, books, websites, tables, drawings, etc.
 
@@ -26,7 +28,7 @@ All models are wrong, but some models are useful.  A node link model is useful f
 
 3. Observations - a concise statment describing a key observation made by a resercher
 
-The relationships between these nodes are expressed as links. Tacitus includes four types of links:
+The relationships between these nodes are expressed as links. There are four types of links:
 
 1. Action yields Document - In conducting an Action, the researcher produces a Document (e.g. web search (Action) yields a wikipedia page (Document))
 
@@ -34,12 +36,14 @@ The relationships between these nodes are expressed as links. Tacitus includes f
 
 3. Document used by Action - The researcher uses a Document during execution of an Action (e.g. report (Document) was read (Action))  
 
-4. Observation addressed by Action - Action executed in an attempt to follow-up on a previously recorded observation (e.g. "costs seem high" (Observation) assessed with a review of costs (Action))
+4. Observation addressed by Action - Action executed in an attempt to follow-up on a previously recorded observation (e.g. "costs appear high" (Observation) assessed with a detailed review of costs (Action))
 
 ---
 
-##Application 
-Tacitus was written in C++ using Microsoft Visual Studio 2013
+##The Application 
+Tacitus was designed around the conceptual model described above.  It allows the user to easily capture pieces of the system as they arise.  Additionally, it graphically displays the system (either as lists or a network).  These displays are interactive, such that the user can interrogate the system to a level of detail that is appropriate for the user.
+
+Tacitus was written in C++ using Microsoft Visual Studio 2013's Windows Form Template.
 
 ##Build Instructions
 
@@ -73,7 +77,10 @@ Using Microsoft Visual Studio 2013
 
 12. Double click *knowledgeFrom.exe* to run the program
 
+---
 
+###About the Author
+I am not a professional software developer.  I learned quite a bit from people on YouTube (especially *Jaime King*, *CodingMadeEasy*, and *What's a Creel?*).  With what I've learned, I am able to use these limited computer programming skills to solve real problems I have at work and home. I find it to be one of the most fulfilling experiences of my life.  I put Tacitus together about a year ago to help me keep my thoughts organized at work and am absolutely killing it.  I think Tacitus could be a lot better and am hoping to enlist the help of others to use and improve it.
 
 
 
