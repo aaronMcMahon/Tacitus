@@ -1,7 +1,7 @@
 # Tacitus
 Increase your capacity for creative problem solving by unburdening your brain of the effortful and mundane task of record keeping.
 
-Tacitus is an application that facilitates a unique approach to knowledge management.  It allows you to keep track of:
+Tacitus is a free open-source application that facilitates a unique approach to knowledge management.  It allows you to keep track of:
 
 1. What you did
 2. Why you did it
