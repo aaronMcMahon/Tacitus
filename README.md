@@ -10,6 +10,8 @@ Tacitus is an application that facilitates a unique approach to knowledge manage
 4. What you thought
 5. How all that relates to what you did next   
 
+![] (GIF.gif)
+
 ---
 
 ##Statement of Problem
