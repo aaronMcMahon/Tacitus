@@ -775,7 +775,9 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				al_clear_to_color(WINDOW_COLOR);
 				drawBackground(translateX, translateY);
 				al_register_event_source(event_queue, al_get_keyboard_event_source());
-				if (tempEdge.parent >= 0 && tempEdge.child >= 0 && tempEdge.child != tempEdge.parent)
+				if (tempEdge.parent >= 0 
+					&& tempEdge.child >= 0 
+					&& tempEdge.child != tempEdge.parent)
 				{
 					edgeVector.emplace(edgeVector.begin(), tempEdge);
 				}

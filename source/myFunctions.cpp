@@ -217,6 +217,7 @@ And it will:
 */
 
 	int validEdge = 0;
+	std::string parentType, childType;
 	Edge tempEdge; //temporary edge object that will be added to vector of edges
 
 	//wait for mouse button input
@@ -238,6 +239,7 @@ And it will:
 			if (tempX > nodeVector[i].x && tempX < nodeVector[i].x + NODE_WIDTH && tempY > nodeVector[i].y && tempY < nodeVector[i].y + NODE_HEIGHT)
 			{
 				validEdge++;
+				parentType = nodeVector[i].type;
 				tempEdge.parent = nodeVector[i].id; //store the clicked node's id as the parent id in the temporary edge object
 				//al_wait_for_event(event_queue, &events);
 				while (events.type != ALLEGRO_EVENT_MOUSE_BUTTON_UP)
@@ -259,10 +261,16 @@ And it will:
 					//check if node sits under current location of cursor
 					if (tempX > nodeVector[j].x && tempX < nodeVector[j].x + NODE_WIDTH && tempY > nodeVector[j].y && tempY < nodeVector[j].y + NODE_HEIGHT)
 					{
+						childType = nodeVector[j].type;
 						tempEdge.child = nodeVector[j].id; //store the identified node's as the parent id in the temporary edge object
 						tempX = 0;
 						tempY = 0;
-						validEdge++;
+						//check that edge links process node with document/observation node, its invalid otherwise
+						if (childType == "Process" || parentType == "Process")
+						{
+							if (childType != parentType) validEdge++;
+						}
+
 					}
 				}
 			}
