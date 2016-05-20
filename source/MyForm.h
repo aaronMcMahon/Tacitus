@@ -136,6 +136,7 @@ namespace knowledgeForm {
 			// 
 			this->nodeNickname->Location = System::Drawing::Point(102, 159);
 			this->nodeNickname->Name = L"nodeNickname";
+			this->nodeNickname->ReadOnly = true;
 			this->nodeNickname->Size = System::Drawing::Size(727, 22);
 			this->nodeNickname->TabIndex = 7;
 			// 
@@ -143,6 +144,7 @@ namespace knowledgeForm {
 			// 
 			this->nodeDescription->Location = System::Drawing::Point(102, 199);
 			this->nodeDescription->Name = L"nodeDescription";
+			this->nodeDescription->ReadOnly = true;
 			this->nodeDescription->Size = System::Drawing::Size(727, 22);
 			this->nodeDescription->TabIndex = 8;
 			// 
@@ -150,6 +152,7 @@ namespace knowledgeForm {
 			// 
 			this->nodeFileLocation->Location = System::Drawing::Point(102, 237);
 			this->nodeFileLocation->Name = L"nodeFileLocation";
+			this->nodeFileLocation->ReadOnly = true;
 			this->nodeFileLocation->Size = System::Drawing::Size(727, 22);
 			this->nodeFileLocation->TabIndex = 9;
 			// 
@@ -189,6 +192,7 @@ namespace knowledgeForm {
 			this->nodeType->Name = L"nodeType";
 			this->nodeType->Size = System::Drawing::Size(121, 52);
 			this->nodeType->TabIndex = 14;
+			this->nodeType->SelectedIndexChanged += gcnew System::EventHandler(this, &MyForm::nodeType_SelectedIndexChanged);
 			// 
 			// label3
 			// 
@@ -282,14 +286,14 @@ namespace knowledgeForm {
 			// networkToolStripMenuItem
 			// 
 			this->networkToolStripMenuItem->Name = L"networkToolStripMenuItem";
-			this->networkToolStripMenuItem->Size = System::Drawing::Size(175, 22);
+			this->networkToolStripMenuItem->Size = System::Drawing::Size(129, 22);
 			this->networkToolStripMenuItem->Text = L"Network";
 			this->networkToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::networkToolStripMenuItem_Click);
 			// 
 			// listToolStripMenuItem
 			// 
 			this->listToolStripMenuItem->Name = L"listToolStripMenuItem";
-			this->listToolStripMenuItem->Size = System::Drawing::Size(175, 22);
+			this->listToolStripMenuItem->Size = System::Drawing::Size(129, 22);
 			this->listToolStripMenuItem->Text = L"List";
 			this->listToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::listToolStripMenuItem_Click);
 			// 
@@ -615,7 +619,11 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				tempNode.type = context.marshal_as<std::string>(nodeType->Text);
 				tempNode.nickname = context.marshal_as<std::string>(nodeNickname->Text);
 				tempNode.description = context.marshal_as<std::string>(nodeDescription->Text);
-				tempNode.fileLocation = context.marshal_as<std::string>(nodeFileLocation->Text);
+				if (tempNode.type == "Document")
+				{
+					tempNode.fileLocation = context.marshal_as<std::string>(nodeFileLocation->Text);
+				}
+
 				al_flush_event_queue(event_queue);//clear event queue
 				while (events.keyboard.keycode != ALLEGRO_KEY_ESCAPE && events.type != ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) al_wait_for_event(event_queue, &events);//wait for esc to cancel or mouse button to insert new node
 
@@ -1085,6 +1093,22 @@ private: System::Void button1_Click(System::Object^  sender, System::EventArgs^ 
 	openFileDialog3->InitialDirectory = nodeFileTextBox->Text;
 	openFileDialog3->ShowDialog();
 	nodeFileLocation->Text = openFileDialog3->FileName;
+}
+private: System::Void nodeType_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
+{
+	if (this->nodeType->SelectedItem == "Document")
+	{
+		this->nodeNickname->ReadOnly = false;
+		this->nodeDescription->ReadOnly = false;
+		this->nodeFileLocation->ReadOnly = false;
+	}
+	if (this->nodeType->SelectedItem == "Observation" || this->nodeType->SelectedItem == "Process")
+	{
+		this->nodeNickname->ReadOnly = false;
+		this->nodeDescription->ReadOnly = false;
+		this->nodeFileLocation->ReadOnly = true;
+	}
+
 }
 }
 ; 
