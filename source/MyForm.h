@@ -801,6 +801,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					{
 						nodeActivated = true;
 						activeNode = i;
+
 					}
 				}
 			}
@@ -814,9 +815,22 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 			char const * nodeType = nodeVector[activeNode].type.c_str();
 			char const * nodeNickname = nodeVector[activeNode].nickname.c_str();
 			char const * nodeDescription = nodeVector[activeNode].description.c_str();
-			nodeVector[activeNode].x = events.mouse.x + translateX - NODE_WIDTH / 2;
-			nodeVector[activeNode].y = events.mouse.y + translateY - NODE_HEIGHT / 2;
+			//check if mouse drag was greater then the size of a node
+			if (abs(events.mouse.x + translateX - nodeVector[activeNode].x) > NODE_WIDTH || abs(events.mouse.y + translateY - nodeVector[activeNode].y) > NODE_HEIGHT)
+			{
+				//move the node
+				nodeVector[activeNode].x = events.mouse.x + translateX - NODE_WIDTH / 2;
+				nodeVector[activeNode].y = events.mouse.y + translateY - NODE_HEIGHT / 2;
+			}
+			else
+			{
+				//pan screen such that it is centered on the selected Node
+				translateX = nodeVector[activeNode].x - WINDOW_X / 2;
+				translateY = nodeVector[activeNode].y - WINDOW_Y / 2;
+			}
+
 			nodeActivated = false;
+
 			al_clear_to_color(WINDOW_COLOR); //redraw screen
 			drawBackground(translateX, translateY);
 			al_draw_text(font, FONT_COLOR, FONT_SIZE, 0, 0, &nodeType[0]);
