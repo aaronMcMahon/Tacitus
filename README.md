@@ -47,6 +47,8 @@ Tacitus was designed around the conceptual model described above.  It allows the
 
 Tacitus was written in C++ using Microsoft Visual Studio 2013's Windows Form Template. It makes heavy use of Allegro 5, an open source gaming library (https://github.com/liballeg/allegro5).
 
+Run the file "setup.exe" to load Tacitus on your machine.
+
 ---
 
 ##Questions, Comments, Concerns
