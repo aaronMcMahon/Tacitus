@@ -8,7 +8,9 @@ Tacitus is a free open-source application that facilitates a unique approach to 
 3. What you used 
 3. What you produced
 4. What you thought
-5. How all that relates to what you did next   
+5. How all that relates to what you did next 
+
+Get Tacitus here: http://aaronmcmahon.github.io/index.html  
 
 ![] (GIF.gif)
 
