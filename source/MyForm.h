@@ -688,14 +688,18 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				al_flip_display();
 
-				translateY -= WINDOW_Y/4;
+				for (int i = 0; i < PAN_FRAME; i++)
+				{
+					translateY -= WINDOW_Y/4/PAN_FRAME;					
+					al_clear_to_color(WINDOW_COLOR);
+					drawBackground(translateX, translateY);
+					drawEdges(nodeVector, edgeVector, translateX, translateY);
+					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
+					drawMenu(0);
+					al_flip_display();
+				}
 
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0);
-				al_flip_display();
+
 				break;
 
 			case ALLEGRO_KEY_DOWN:
@@ -706,14 +710,17 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				al_flip_display();
 
-				translateY += WINDOW_Y / 4;
+				for (int i = 0; i < PAN_FRAME; i++)
+				{
+					translateY += WINDOW_Y / 4 / PAN_FRAME;
+					al_clear_to_color(WINDOW_COLOR);
+					drawBackground(translateX, translateY);
+					drawEdges(nodeVector, edgeVector, translateX, translateY);
+					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
+					drawMenu(0);
+					al_flip_display();
+				}
 
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0);
-				al_flip_display();
 				break;
 
 			case ALLEGRO_KEY_LEFT:
@@ -724,15 +731,17 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				al_flip_display();
 
-				translateX -= WINDOW_Y / 4;
+				for (int i = 0; i < PAN_FRAME; i++)
+				{
+					translateX -= WINDOW_Y / 4 / PAN_FRAME;
+					al_clear_to_color(WINDOW_COLOR);
+					drawBackground(translateX, translateY);
+					drawEdges(nodeVector, edgeVector, translateX, translateY);
+					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
+					drawMenu(0);
+					al_flip_display();
+				}
 
-
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0);
-				al_flip_display();
 				break;
 
 			case ALLEGRO_KEY_RIGHT:
@@ -743,14 +752,17 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				al_flip_display();
 
-				translateX += WINDOW_Y / 4;
+				for (int i = 0; i < PAN_FRAME; i++)
+				{
+					translateX += WINDOW_Y / 4 / PAN_FRAME;
+					al_clear_to_color(WINDOW_COLOR);
+					drawBackground(translateX, translateY);
+					drawEdges(nodeVector, edgeVector, translateX, translateY);
+					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
+					drawMenu(0);
+					al_flip_display();
+				}
 
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0);
-				al_flip_display();
 				break;
 
 			case ALLEGRO_KEY_E:
@@ -821,6 +833,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 		{
 			tempX = events.mouse.x + translateX;
 			tempY = events.mouse.y + translateY;
+			int translateDeltaX, translateDeltaY;
 			
 			char const * nodeType = nodeVector[activeNode].type.c_str();
 			char const * nodeNickname = nodeVector[activeNode].nickname.c_str();
@@ -835,8 +848,23 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 			else
 			{
 				//pan screen such that it is centered on the selected Node
-				translateX = nodeVector[activeNode].x - WINDOW_X / 2;
-				translateY = nodeVector[activeNode].y - WINDOW_Y / 2;
+				translateDeltaX = (nodeVector[activeNode].x - WINDOW_X / 2 - translateX) / PAN_FRAME;
+				translateDeltaY = (nodeVector[activeNode].y - WINDOW_Y / 2 - translateY) / PAN_FRAME;
+				for (int i = 0; i < PAN_FRAME; i++)
+				{
+					translateX += translateDeltaX;
+					translateY += translateDeltaY;
+					al_clear_to_color(WINDOW_COLOR); //redraw screen
+					drawBackground(translateX, translateY);
+					al_draw_text(font, FONT_COLOR, FONT_SIZE, 0, 0, &nodeType[0]);
+					al_draw_text(font, FONT_COLOR, FONT_SIZE, 1 * FONT_SIZE, 0, &nodeNickname[0]);
+					al_draw_text(font, FONT_COLOR, FONT_SIZE, 2 * FONT_SIZE, 0, &nodeDescription[0]);
+					drawEdges(nodeVector, edgeVector, translateX, translateY);
+					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
+					highlightRelatives(activeNode, edgeVector, nodeVector, translateX, translateY);
+					drawMenu(0);
+					al_flip_display();
+				}
 			}
 
 			nodeActivated = false;
@@ -854,7 +882,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 			drawMenu(0);
 			al_flip_display();
 
-			webBrowser1->Navigate(context.marshal_as<System::String ^>(nodeVector[activeNode].fileLocation));
 			addressBox->Text = context.marshal_as<System::String ^>(nodeVector[activeNode].fileLocation);
 		}
 
@@ -862,6 +889,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 		if (events.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
 		{
 			done = true;
+			if (!addressBox->Text->Length == 0)	webBrowser1->Navigate(context.marshal_as<System::String ^>(nodeVector[activeNode].fileLocation));
 		}
 	}
 
@@ -1013,11 +1041,28 @@ private: System::Void listToolStripMenuItem_Click(System::Object^  sender, Syste
 			{
 
 			case ALLEGRO_KEY_PGDN:
-				translateY += WINDOW_Y / 4;
+				for (int i = 0; i < PAN_FRAME; i++)
+				{
+					translateY += WINDOW_Y / 4 / PAN_FRAME;
+					al_clear_to_color(WINDOW_COLOR); //redraw screen
+					drawNodes(listNodeVector, subFont, edgeVector, 0, translateY);
+					drawListDividers();
+					al_flip_display();
+				}
+
 				break;
 
 			case ALLEGRO_KEY_PGUP:
-				translateY -= WINDOW_Y / 4;
+				for (int i = 0; i < PAN_FRAME; i++)
+				{
+					translateY -= WINDOW_Y / 4 / PAN_FRAME;
+					al_clear_to_color(WINDOW_COLOR); //redraw screen
+					drawNodes(listNodeVector, subFont, edgeVector, 0, translateY);
+					drawListDividers();
+					al_flip_display();
+				}
+
+				
 				if (translateY < 0) translateY = 0;
 				break;
 			}

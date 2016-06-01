@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{21A2F68A-A38C-4CD5-8CB7-BE413C5E7080}</ProjectGuid>
+    <ProjectGuid>{C007E632-8325-45F2-A2F9-80B22B13B63D}</ProjectGuid>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
     <RootNamespace>knowledgeForm</RootNamespace>

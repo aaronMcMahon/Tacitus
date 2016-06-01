@@ -43,6 +43,7 @@
 #define LIST_NODE_SCALAR 1.1
 #define ZOOM_MAX 10
 #define ZOOM_MIN -10
+#define PAN_FRAME 5
 
 class Node
 {
