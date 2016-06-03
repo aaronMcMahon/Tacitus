@@ -396,6 +396,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 	float tempX = 0;
 	float tempY = 0;
 	bool nodeActivated = false;
+	bool transition = false;
 	int activeNode = 0;
 	bool done = false; //used for exiting "game loop"
 	std::string nodeFileName;
@@ -827,6 +828,20 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					}
 				}
 			}
+			if (events.mouse.button & 2)
+			{
+				tempX = events.mouse.x + translateX;
+				tempY = events.mouse.y + translateY;
+
+				for (int i = 0; i < nodeVector.size(); i++) //cycle through node vector
+				{
+					if (tempX > nodeVector[i].x && tempX < nodeVector[i].x + NODE_WIDTH && tempY > nodeVector[i].y && tempY < nodeVector[i].y + NODE_HEIGHT)
+					{
+						transition = true;
+						tempNode = nodeVector[i];
+					}
+				}
+			}
 		}
 
 		if (events.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP && nodeActivated == true)
@@ -883,6 +898,53 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 			al_flip_display();
 
 			addressBox->Text = context.marshal_as<System::String ^>(nodeVector[activeNode].fileLocation);
+		}
+
+		if (events.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP && transition == true)
+		{
+			std::vector<nodeTransition> parentTrans;
+			std::vector<nodeTransition> childTrans;
+			parentTrans = parentTransition(nodeVector, edgeVector, tempNode);
+			childTrans = childTransition(nodeVector, edgeVector, tempNode);
+			for (int k = 0; k < PAN_FRAME; k++)
+			{
+				for (int i = 0; i < parentTrans.size(); i++) //iterate through node transition vector
+				{
+					for (int j = 0; j < nodeVector.size(); j++)
+					{
+						if (parentTrans[i].id == nodeVector[j].id)
+						{
+							nodeVector[j].x += parentTrans[i].deltaX(PAN_FRAME);
+							nodeVector[j].y += parentTrans[i].deltaY(PAN_FRAME);
+						}
+					}
+				}
+				for (int i = 0; i < childTrans.size(); i++) //iterate through node transition vector
+				{
+					for (int j = 0; j < nodeVector.size(); j++)
+					{
+						if (childTrans[i].id == nodeVector[j].id)
+						{
+							nodeVector[j].x += childTrans[i].deltaX(PAN_FRAME);
+							nodeVector[j].y += childTrans[i].deltaY(PAN_FRAME);
+						}
+					}
+				}
+				al_clear_to_color(WINDOW_COLOR); //redraw screen
+				drawBackground(translateX, translateY);
+				//al_draw_text(font, FONT_COLOR, FONT_SIZE, 0, 0, &nodeType[0]);
+				//al_draw_text(font, FONT_COLOR, FONT_SIZE, 1 * FONT_SIZE, 0, &nodeNickname[0]);
+				//al_draw_text(font, FONT_COLOR, FONT_SIZE, 2 * FONT_SIZE, 0, &nodeDescription[0]);
+
+				//redrawNodesEdges(nodeVector, edgeVector);
+				drawEdges(nodeVector, edgeVector, translateX, translateY);
+				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
+				highlightRelatives(activeNode, edgeVector, nodeVector, translateX, translateY);
+				drawMenu(0);
+				al_flip_display();
+			}
+
+			transition = false;
 		}
 
 
@@ -1011,7 +1073,7 @@ private: System::Void listToolStripMenuItem_Click(System::Object^  sender, Syste
 	al_init_ttf_addon();
 
 	ALLEGRO_FONT *font = al_load_ttf_font(FONT_TYPE, FONT_SIZE, NULL); //create a font for Allegro Display
-	ALLEGRO_FONT *subFont = al_load_font(FONT_TYPE, NODE_WIDTH, NULL); //create a font for Allegro Display
+	ALLEGRO_FONT *subFont = al_load_ttf_font(FONT_TYPE, NODE_WIDTH, NULL); //create a font for Allegro Display
 
 	ALLEGRO_EVENT_QUEUE *event_queue = al_create_event_queue();//create an event queue to store input
 

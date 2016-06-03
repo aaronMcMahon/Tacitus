@@ -44,6 +44,8 @@
 #define ZOOM_MAX 10
 #define ZOOM_MIN -10
 #define PAN_FRAME 5
+#define PARENT_OFFSET -200
+#define CHILD_OFFSET 200
 
 class Node
 {
@@ -59,6 +61,24 @@ public:
 	int parent;
 	int child;
 	std::string parentName, childName;
+};
+class nodeTransition
+{
+public:
+	float originalX, originalY, updatedX, updatedY;
+	int id;
+	float deltaX(int panFrame)
+	{
+		float delta;
+		delta = (updatedX - originalX) / panFrame;
+		return delta;
+	}
+	float deltaY(int panFrame)
+	{
+		float delta;
+		delta = (updatedY - originalY) / panFrame;
+		return delta;
+	}
 };
 
 void drawEdges(std::vector<Node> tempNodeVector, std::vector<Edge> tempEdgeVector,int translateX, int translateY);
@@ -76,3 +96,5 @@ void drawBackground(int translateX, int translateY);
 void populateListNodeVector(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, std::vector<Node> &listNodeVector);
 void drawListDividers();
 void populateInterrogateNodeVector(std::vector<Node> &interrogateNodeVector, std::vector<Node> listNodeVector, std::vector<Edge> &edgeVector, int activeNode);
+std::vector<nodeTransition> parentTransition(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, Node selectedNode);
+std::vector<nodeTransition> childTransition(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, Node selectedNode);

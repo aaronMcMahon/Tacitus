@@ -826,3 +826,61 @@ And it will:
 		}
 	}
 }
+std::vector<nodeTransition> parentTransition(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, Node selectedNode)
+{
+	std::vector<nodeTransition> prTrVec;
+	std::vector<int> nodeIds;
+	nodeTransition tempTr;
+	for (int i = 0; i < edgeVector.size(); i++) //iterate through edge vector to find all parent nodes
+	{
+		if (edgeVector[i].child == selectedNode.id)
+		{
+			nodeIds.push_back(edgeVector[i].parent);
+		}
+	}
+	for (int k = 0; k < nodeVector.size(); k++) //iterate through node vector, compare with list of parent node ids, record in nodeTransition vector
+	{
+		for (int j = 0; j < nodeIds.size(); j++)
+		{
+			if (nodeIds[j] == nodeVector[k].id)
+			{
+				tempTr.originalX = nodeVector[k].x;
+				tempTr.originalY = nodeVector[k].y;
+				tempTr.updatedX = selectedNode.x + PARENT_OFFSET;
+				tempTr.updatedY = selectedNode.y - j * NODE_HEIGHT * 2;
+				tempTr.id = nodeIds[j];
+				prTrVec.push_back(tempTr);
+			}
+		}
+	}
+	return prTrVec;
+}
+std::vector<nodeTransition> childTransition(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, Node selectedNode)
+{
+	std::vector<nodeTransition> prTrVec;
+	std::vector<int> nodeIds;
+	nodeTransition tempTr;
+	for (int i = 0; i < edgeVector.size(); i++) //iterate through edge vector to find all parent nodes
+	{
+		if (edgeVector[i].parent == selectedNode.id)
+		{
+			nodeIds.push_back(edgeVector[i].child);
+		}
+	}
+	for (int k = 0; k < nodeVector.size(); k++) //iterate through node vector, compare with list of parent node ids, record in nodeTransition vector
+	{
+		for (int j = 0; j < nodeIds.size(); j++)
+		{
+			if (nodeIds[j] == nodeVector[k].id)
+			{
+				tempTr.originalX = nodeVector[k].x;
+				tempTr.originalY = nodeVector[k].y;
+				tempTr.updatedX = selectedNode.x + CHILD_OFFSET;
+				tempTr.updatedY = selectedNode.y - j * NODE_HEIGHT * 2;
+				tempTr.id = nodeIds[j];
+				prTrVec.push_back(tempTr);
+			}
+		}
+	}
+	return prTrVec;
+}
