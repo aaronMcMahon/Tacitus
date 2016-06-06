@@ -44,8 +44,9 @@
 #define ZOOM_MAX 10
 #define ZOOM_MIN -10
 #define PAN_FRAME 5
-#define PARENT_OFFSET -200
-#define CHILD_OFFSET 200
+#define PARENT_OFFSET -125
+#define CHILD_OFFSET 125
+#define BOX_SIZE 125
 
 class Node
 {
@@ -76,7 +77,7 @@ public:
 	float deltaY(int panFrame)
 	{
 		float delta;
-		delta = (updatedY - originalY) / panFrame;
+		delta = (updatedY - originalY + NODE_HEIGHT) / panFrame;
 		return delta;
 	}
 };
@@ -88,7 +89,7 @@ void redrawNodesEdges(std::vector<Node> nodeVector, std::vector<Edge> edgeVector
 Node addNode(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, ALLEGRO_FONT *font, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, Node tempNode, int translateX, int translateY);
 Edge addEdge(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, ALLEGRO_FONT * subFont, int translateX, int translateY);
 std::vector<Node> moveChildren(std::vector<Node> nodeVector, std::vector<Edge> edgeVector, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, int translateX, int translateY);
-void drawMenu(int i);
+void drawMenu(int i, ALLEGRO_FONT *menuFont);
 std::vector<Node> deleteNode(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, int translateX, int translateY);
 std::vector<Edge> deleteEdge(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, int translateX, int translateY);
 void highlightRelatives(int &activeNode, std::vector<Edge> &edgeVector, std::vector<Node> &nodeVector, int translateX, int translateY);

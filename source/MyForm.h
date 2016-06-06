@@ -508,7 +508,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 	drawBackground(translateX, translateY);
 	drawEdges(nodeVector, edgeVector, translateX, translateY);
 	drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-	drawMenu(0);
+	drawMenu(0, font);
 	al_flip_display();
 
 	//int zoom;
@@ -571,7 +571,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					drawBackground(translateX, translateY);
 					drawEdges(nodeVector, edgeVector, translateX, translateY);
 					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-					drawMenu(0);
+				drawMenu(0, font);
 					al_flip_display();
 					break;
 				}
@@ -583,7 +583,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0);
+			drawMenu(0, font);
 				al_flip_display();
 				//drawMenu(4);
 				break;
@@ -594,7 +594,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0);
+			drawMenu(0, font);
 				al_flip_display();
 				nodeVector = moveChildren(nodeVector, edgeVector, event_queue, events, translateX, translateY);
 				al_clear_to_color(WINDOW_COLOR);
@@ -602,7 +602,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0);
+			drawMenu(0, font);
 				al_flip_display();
 				//drawMenu(3);
 				break;
@@ -613,7 +613,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0);
+			drawMenu(0, font);
 				al_flip_display();
 				//drawMenu(1);
 				//set temp node text fields
@@ -637,7 +637,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					//redrawNodesEdges(nodeVector, edgeVector);
 					drawEdges(nodeVector, edgeVector, translateX, translateY);
 					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-					drawMenu(0);
+				drawMenu(0, font);
 					al_flip_display();
 				}
 				break;
@@ -649,7 +649,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0);
+			drawMenu(0, font);
 				al_flip_display();
 				nodeVector = deleteNode(nodeVector, edgeVector, event_queue, events, translateX, translateY);
 				al_clear_to_color(WINDOW_COLOR);
@@ -657,7 +657,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0);
+			drawMenu(0, font);
 				al_flip_display();
 				//drawMenu(3);
 				break;
@@ -668,7 +668,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0);
+			drawMenu(0, font);
 				al_flip_display();
 				edgeVector = deleteEdge(nodeVector, edgeVector, event_queue, events, translateX, translateY);
 				al_clear_to_color(WINDOW_COLOR);
@@ -676,7 +676,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0);
+			drawMenu(0, font);
 				al_flip_display();
 				//drawMenu(3);
 				break;
@@ -696,7 +696,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					drawBackground(translateX, translateY);
 					drawEdges(nodeVector, edgeVector, translateX, translateY);
 					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-					drawMenu(0);
+				drawMenu(0, font);
 					al_flip_display();
 				}
 
@@ -718,7 +718,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					drawBackground(translateX, translateY);
 					drawEdges(nodeVector, edgeVector, translateX, translateY);
 					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-					drawMenu(0);
+				drawMenu(0, font);
 					al_flip_display();
 				}
 
@@ -739,7 +739,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					drawBackground(translateX, translateY);
 					drawEdges(nodeVector, edgeVector, translateX, translateY);
 					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-					drawMenu(0);
+				drawMenu(0, font);
 					al_flip_display();
 				}
 
@@ -760,7 +760,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					drawBackground(translateX, translateY);
 					drawEdges(nodeVector, edgeVector, translateX, translateY);
 					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-					drawMenu(0);
+				drawMenu(0, font);
 					al_flip_display();
 				}
 
@@ -773,7 +773,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0);
+			drawMenu(0, font);
 				al_flip_display();
 				//drawMenu(2);
 				al_unregister_event_source(event_queue, al_get_keyboard_event_source());
@@ -783,7 +783,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0);
+			drawMenu(0, font);
 				al_flip_display();
 				al_clear_to_color(WINDOW_COLOR);
 				drawBackground(translateX, translateY);
@@ -799,7 +799,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0);
+			drawMenu(0, font);
 				al_flip_display();
 				break;
 			}
@@ -877,7 +877,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					drawEdges(nodeVector, edgeVector, translateX, translateY);
 					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 					highlightRelatives(activeNode, edgeVector, nodeVector, translateX, translateY);
-					drawMenu(0);
+				drawMenu(0, font);
 					al_flip_display();
 				}
 			}
@@ -894,7 +894,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 			drawEdges(nodeVector, edgeVector, translateX, translateY);
 			drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 			highlightRelatives(activeNode, edgeVector, nodeVector, translateX, translateY);
-			drawMenu(0);
+		drawMenu(0, font);
 			al_flip_display();
 
 			addressBox->Text = context.marshal_as<System::String ^>(nodeVector[activeNode].fileLocation);
@@ -940,7 +940,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				highlightRelatives(activeNode, edgeVector, nodeVector, translateX, translateY);
-				drawMenu(0);
+			drawMenu(0, font);
 				al_flip_display();
 			}
 

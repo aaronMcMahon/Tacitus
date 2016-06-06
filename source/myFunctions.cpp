@@ -361,18 +361,18 @@ And it will:
 	return nodeVector;
 }
 
-void drawMenu(int i)
+void drawMenu(int i, ALLEGRO_FONT *menuFont)
 {
 /*
 Give this function:
      - integer value of zero*
+	 - font for the text
 And it will:
     - draw a list of key commands to the map
 *I had a clever idea about using an integer to alter the list of commands, but gave up on it.  I never got around to dropping this functions requirement for an integer parameter
 
 */	
     
-    ALLEGRO_FONT *menuFont = al_load_font(FONT_TYPE, FONT_SIZE, NULL); //create a font for Allegro Display
 	int j = 0;
 	const char * nKey = "Add Node = N";
 	const char * eKey = "Add Edge = E";
@@ -590,22 +590,23 @@ Give this function:
 And it will:
     - draw a series of concentric circles to the map
 
-*/	translateX = -translateX;
+*/	
+	translateX = -translateX;
 	translateY = -translateY;
-	float maxRadius = WINDOW_X * WINDOW_X + WINDOW_Y * WINDOW_Y;
-	maxRadius = sqrt(maxRadius);
-	int colored = 0;
-	for (float radius = maxRadius; radius > 0; radius = radius - maxRadius / DIVISIONS)
-	{
-		if (colored == 1)
+	float maxRadius = WINDOW_X * 10;
+	//maxRadius = sqrt(maxRadius);
+	bool colored = false;
+	for (int x = 0; x < maxRadius; x += BOX_SIZE)
+	{	
+		if (colored)
 		{
-			al_draw_filled_circle(translateX, translateY + WINDOW_Y, radius, al_map_rgb(255, 255, 255));
-			colored = 0;
+			//al_draw_filled_rectangle(x - translateX, y - translateY, x - translateX + BOX_SIZE, y - translateY + BOX_SIZE, al_map_rgb(255, 255, 255));
+			colored = false;
 		}
 		else
 		{
-			al_draw_filled_circle(translateX, translateY + WINDOW_Y, radius, al_map_rgb(249, 242, 255));
-			colored = 1;
+			al_draw_filled_rectangle(x + translateX, -maxRadius, x + translateX + BOX_SIZE, WINDOW_Y, al_map_rgb(249, 242, 255));
+			colored = true;
 		}
 	}
 }
