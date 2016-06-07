@@ -99,3 +99,5 @@ void drawListDividers();
 void populateInterrogateNodeVector(std::vector<Node> &interrogateNodeVector, std::vector<Node> listNodeVector, std::vector<Edge> &edgeVector, int activeNode);
 std::vector<nodeTransition> parentTransition(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, Node selectedNode);
 std::vector<nodeTransition> childTransition(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, Node selectedNode);
+void copyVectors(std::vector<Node> &origNode, std::vector<Node> &copyNode, std::vector<Edge> &origEdge, std::vector<Edge> &copyEdge);
+void undoChange(std::vector<Node> &origNode, std::vector<Node> &copyNode, std::vector<Edge> &origEdge, std::vector<Edge> &copyEdge);

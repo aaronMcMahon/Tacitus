@@ -191,8 +191,15 @@ And it will:
     - return the data for the newly defined node
 
 */	
+	int modX;
+
 	tempNode.x = events.mouse.x + translateX;
 	tempNode.y = events.mouse.y + translateY;
+
+	modX = (events.mouse.x + translateX) % BOX_SIZE;
+
+	if (modX < BOX_SIZE / 2) tempNode.x -= modX;
+	else tempNode.x += BOX_SIZE - modX;
 
 	if (nodeVector.size() > 0) tempNode.id = nodeVector[0].id + 1;
 	else tempNode.id = 0;
@@ -208,7 +215,6 @@ Give this function:
      - an event queue that the Allegro library understands
      - an event that the Allegro library understands
      - font for the text    
-     - the data for a single node to be added
      - how far the user has already panned the image in the x and y direction
 And it will:
     - wait for the user to click and drag between nodes to define an edge
@@ -884,4 +890,14 @@ std::vector<nodeTransition> childTransition(std::vector<Node> &nodeVector, std::
 		}
 	}
 	return prTrVec;
+}
+void copyVectors(std::vector<Node> &origNode, std::vector<Node> &copyNode, std::vector<Edge> &origEdge, std::vector<Edge> &copyEdge)
+{
+	copyNode = origNode;
+	copyEdge = origEdge;
+}
+void undoChange(std::vector<Node> &origNode, std::vector<Node> &copyNode, std::vector<Edge> &origEdge, std::vector<Edge> &copyEdge)
+{
+	origNode = copyNode;
+	origEdge = copyEdge;
 }

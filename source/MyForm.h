@@ -513,7 +513,8 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 
 	//int zoom;
 	int panBufferX, panBufferY;
-
+	std::vector<Node> copyNode;
+	std::vector<Edge> copyEdge;
 
 	while (!done)
 	{
@@ -543,6 +544,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 			const char * deleteNodeMessage = "Deleting Node...";
 			const char * deleteEdgeMessage = "Deleting Edge...";
 			const char * panMessage = "Panning...";
+			const char * undoMessage = "Last Change Undone";
 
 			switch (events.keyboard.keycode)
 			{
@@ -551,30 +553,16 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//	nodeVector = RearrangeDiagram(nodeVector, edgeVector);
 				//	break;
 
-			case ALLEGRO_KEY_P:
+			case ALLEGRO_KEY_U:
+				undoChange(nodeVector, copyNode, edgeVector, copyEdge);				
 				al_clear_to_color(WINDOW_COLOR);
 				drawBackground(translateX, translateY);
-				al_draw_text(font, FONT_COLOR, 0, 0, 0, panMessage);
+				al_draw_text(font, FONT_COLOR, 0, 0, 0, undoMessage);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				al_flip_display();
-				while (events.keyboard.keycode != ALLEGRO_KEY_ESCAPE && events.type != ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) al_wait_for_event(event_queue, &events);//wait for esc to cancel or mouse button to insert new node
+				break;
 
-				if (events.mouse.button & 1)
-				{
-					panBufferX = events.mouse.x;
-					panBufferY = events.mouse.y;
-					while (events.type != ALLEGRO_EVENT_MOUSE_BUTTON_UP) al_wait_for_event(event_queue, &events);
-					translateX += panBufferX - events.mouse.x;
-					translateY += panBufferY - events.mouse.y;
-					al_clear_to_color(WINDOW_COLOR);
-					drawBackground(translateX, translateY);
-					drawEdges(nodeVector, edgeVector, translateX, translateY);
-					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0, font);
-					al_flip_display();
-					break;
-				}
 			case ALLEGRO_KEY_F1:
 				ExportNodesEdges(nodeVector, edgeVector, nodeFileName, edgeFileName);
 				al_clear_to_color(WINDOW_COLOR);
@@ -583,7 +571,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-			drawMenu(0, font);
+				drawMenu(0, font);
 				al_flip_display();
 				//drawMenu(4);
 				break;
@@ -594,15 +582,16 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-			drawMenu(0, font);
+				drawMenu(0, font);
 				al_flip_display();
+				copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 				nodeVector = moveChildren(nodeVector, edgeVector, event_queue, events, translateX, translateY);
 				al_clear_to_color(WINDOW_COLOR);
 				drawBackground(translateX, translateY);
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-			drawMenu(0, font);
+				drawMenu(0, font);
 				al_flip_display();
 				//drawMenu(3);
 				break;
@@ -613,7 +602,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-			drawMenu(0, font);
+				drawMenu(0, font);
 				al_flip_display();
 				//drawMenu(1);
 				//set temp node text fields
@@ -631,13 +620,14 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				if (events.mouse.button & 1)
 				{
 					Node newNode = addNode(nodeVector, edgeVector, font, event_queue, events, tempNode, translateX, translateY);
+					copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 					nodeVector.emplace(nodeVector.begin(), newNode);
 					al_clear_to_color(WINDOW_COLOR);
 					drawBackground(translateX, translateY);
 					//redrawNodesEdges(nodeVector, edgeVector);
 					drawEdges(nodeVector, edgeVector, translateX, translateY);
 					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0, font);
+					drawMenu(0, font);
 					al_flip_display();
 				}
 				break;
@@ -649,15 +639,16 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-			drawMenu(0, font);
+				drawMenu(0, font);
 				al_flip_display();
+				copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 				nodeVector = deleteNode(nodeVector, edgeVector, event_queue, events, translateX, translateY);
 				al_clear_to_color(WINDOW_COLOR);
 				drawBackground(translateX, translateY);
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-			drawMenu(0, font);
+				drawMenu(0, font);
 				al_flip_display();
 				//drawMenu(3);
 				break;
@@ -668,15 +659,16 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-			drawMenu(0, font);
+				drawMenu(0, font);
 				al_flip_display();
+				copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 				edgeVector = deleteEdge(nodeVector, edgeVector, event_queue, events, translateX, translateY);
 				al_clear_to_color(WINDOW_COLOR);
 				drawBackground(translateX, translateY);
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-			drawMenu(0, font);
+				drawMenu(0, font);
 				al_flip_display();
 				//drawMenu(3);
 				break;
@@ -696,7 +688,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					drawBackground(translateX, translateY);
 					drawEdges(nodeVector, edgeVector, translateX, translateY);
 					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0, font);
+					drawMenu(0, font);
 					al_flip_display();
 				}
 
@@ -718,7 +710,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					drawBackground(translateX, translateY);
 					drawEdges(nodeVector, edgeVector, translateX, translateY);
 					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0, font);
+					drawMenu(0, font);
 					al_flip_display();
 				}
 
@@ -739,7 +731,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					drawBackground(translateX, translateY);
 					drawEdges(nodeVector, edgeVector, translateX, translateY);
 					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0, font);
+					drawMenu(0, font);
 					al_flip_display();
 				}
 
@@ -760,7 +752,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					drawBackground(translateX, translateY);
 					drawEdges(nodeVector, edgeVector, translateX, translateY);
 					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0, font);
+					drawMenu(0, font);
 					al_flip_display();
 				}
 
@@ -773,7 +765,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-			drawMenu(0, font);
+				drawMenu(0, font);
 				al_flip_display();
 				//drawMenu(2);
 				al_unregister_event_source(event_queue, al_get_keyboard_event_source());
@@ -783,7 +775,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-			drawMenu(0, font);
+				drawMenu(0, font);
 				al_flip_display();
 				al_clear_to_color(WINDOW_COLOR);
 				drawBackground(translateX, translateY);
@@ -792,6 +784,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					&& tempEdge.child >= 0 
 					&& tempEdge.child != tempEdge.parent)
 				{
+					copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 					edgeVector.emplace(edgeVector.begin(), tempEdge);
 				}
 				//else al_draw_text(font, FONT_COLOR, FONT_SIZE, 0 + FONT_SIZE, 0, "Invalid Edge");
@@ -799,7 +792,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				//redrawNodesEdges(nodeVector, edgeVector);
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-			drawMenu(0, font);
+				drawMenu(0, font);
 				al_flip_display();
 				break;
 			}
@@ -848,6 +841,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 		{
 			tempX = events.mouse.x + translateX;
 			tempY = events.mouse.y + translateY;
+
 			int translateDeltaX, translateDeltaY;
 			
 			char const * nodeType = nodeVector[activeNode].type.c_str();
@@ -857,8 +851,14 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 			if (abs(events.mouse.x + translateX - nodeVector[activeNode].x) > NODE_WIDTH || abs(events.mouse.y + translateY - nodeVector[activeNode].y) > NODE_HEIGHT)
 			{
 				//move the node
-				nodeVector[activeNode].x = events.mouse.x + translateX - NODE_WIDTH / 2;
-				nodeVector[activeNode].y = events.mouse.y + translateY - NODE_HEIGHT / 2;
+				int modX;
+				copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
+				nodeVector[activeNode].x = events.mouse.x + translateX;
+				nodeVector[activeNode].y = events.mouse.y + translateY;
+				modX = (events.mouse.x + translateX) % BOX_SIZE;
+
+				if (modX < BOX_SIZE / 2) nodeVector[activeNode].x -= modX;
+				else nodeVector[activeNode].x += BOX_SIZE - modX;
 			}
 			else
 			{
@@ -877,7 +877,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					drawEdges(nodeVector, edgeVector, translateX, translateY);
 					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 					highlightRelatives(activeNode, edgeVector, nodeVector, translateX, translateY);
-				drawMenu(0, font);
+					drawMenu(0, font);
 					al_flip_display();
 				}
 			}
@@ -894,7 +894,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 			drawEdges(nodeVector, edgeVector, translateX, translateY);
 			drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 			highlightRelatives(activeNode, edgeVector, nodeVector, translateX, translateY);
-		drawMenu(0, font);
+			drawMenu(0, font);
 			al_flip_display();
 
 			addressBox->Text = context.marshal_as<System::String ^>(nodeVector[activeNode].fileLocation);
@@ -906,6 +906,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 			std::vector<nodeTransition> childTrans;
 			parentTrans = parentTransition(nodeVector, edgeVector, tempNode);
 			childTrans = childTransition(nodeVector, edgeVector, tempNode);
+			copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 			for (int k = 0; k < PAN_FRAME; k++)
 			{
 				for (int i = 0; i < parentTrans.size(); i++) //iterate through node transition vector
@@ -940,7 +941,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawEdges(nodeVector, edgeVector, translateX, translateY);
 				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 				highlightRelatives(activeNode, edgeVector, nodeVector, translateX, translateY);
-			drawMenu(0, font);
+				drawMenu(0, font);
 				al_flip_display();
 			}
 
