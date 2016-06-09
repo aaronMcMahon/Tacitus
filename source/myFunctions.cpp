@@ -305,10 +305,11 @@ And it will:
     - change the location of a node and its children nodes on the map based on click-drag-release input from the user's mouse
 
 */
+	events.type = 0;
 	int tempX, tempY, deltaX, deltaY; //integers to store coordinates of selected node and desired movement
 	bool nodeActivated = false;
 	std::vector<int> selectedNodes; //vector for storing id's of nodes to be moved
-
+	
 	while (events.type != ALLEGRO_EVENT_MOUSE_BUTTON_UP)
 	{
 		al_wait_for_event(event_queue, &events); //get input
@@ -439,7 +440,7 @@ And it will:
     - if so, that node gets deleted from the node data
 
 */
-
+	events.type = 0;
 	int tempX, tempY, deltaX, deltaY; //integers to store coordinates of selected node and desired movement
 	bool nodeActivated = false;
 	int selectedNode; //vector for storing id's of nodes to be moved
@@ -900,4 +901,60 @@ void undoChange(std::vector<Node> &origNode, std::vector<Node> &copyNode, std::v
 {
 	origNode = copyNode;
 	origEdge = copyEdge;
+}
+std::vector<button> createButtons(std::vector<const char *> btnNames)
+{
+	int startingCoordX, startingCoordY;
+	int const numBtns = 7;
+	button btnBuffer;
+	startingCoordX = WINDOW_X - BTN_WIDTH - BTN_HEIGHT;
+	startingCoordY = BTN_HEIGHT;
+	std::vector<button> btnVec;
+	
+	for (int i = 0; i < numBtns; i++)
+	{
+		btnBuffer.text = btnNames[i];
+		btnBuffer.yCoord = startingCoordY + i * (BTN_HEIGHT + NODE_HEIGHT);
+		btnBuffer.xCoord = startingCoordX;
+		btnVec.push_back(btnBuffer);
+	}
+	return btnVec;
+	
+}
+void drawButtons(std::vector<button> buttons, ALLEGRO_FONT *btnFont, int clickedBtnIndex, std::vector<const char *> btnNames)
+{
+	int textOffset = (BTN_HEIGHT - FONT_SIZE) / 2;
+	for (int i = 0; i < buttons.size(); i++)
+	{
+		if (i == clickedBtnIndex)
+		{
+			al_draw_filled_rectangle(buttons[i].xCoord,
+									buttons[i].yCoord,
+									buttons[i].xCoord + BTN_WIDTH,
+									buttons[i].yCoord + BTN_HEIGHT,
+									CLICKED_BTN_COLOR);
+
+			al_draw_text(btnFont, BTN_COLOR, buttons[i].xCoord + textOffset, buttons[i].yCoord + textOffset, NULL, btnNames[i]);
+		}
+		else 
+		{
+			al_draw_filled_rectangle(buttons[i].xCoord,
+									buttons[i].yCoord,
+									buttons[i].xCoord + BTN_WIDTH,
+									buttons[i].yCoord + BTN_HEIGHT,
+									BTN_COLOR);
+			al_draw_text(btnFont, FONT_COLOR, buttons[i].xCoord + textOffset, buttons[i].yCoord + textOffset, NULL, btnNames[i]);
+		}
+
+	}
+}
+void drawScreen(int translateX, int translateY, ALLEGRO_FONT *font, const char * message, std::vector<Node> nodeVector, std::vector<Edge> edgeVector, ALLEGRO_FONT * subFont, std::vector<button> buttons, ALLEGRO_FONT *btnFont, int clickedBtnIndex, std::vector<const char *> btnNames)
+{
+	al_clear_to_color(WINDOW_COLOR);
+	drawBackground(translateX, translateY);
+	al_draw_text(font, FONT_COLOR, 0, 0, 0, message);
+	drawEdges(nodeVector, edgeVector, translateX, translateY);
+	drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
+	drawButtons(buttons, btnFont, clickedBtnIndex, btnNames);
+	al_flip_display();
 }

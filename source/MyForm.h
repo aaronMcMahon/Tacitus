@@ -262,14 +262,14 @@ namespace knowledgeForm {
 			// newToolStripMenuItem
 			// 
 			this->newToolStripMenuItem->Name = L"newToolStripMenuItem";
-			this->newToolStripMenuItem->Size = System::Drawing::Size(111, 22);
+			this->newToolStripMenuItem->Size = System::Drawing::Size(117, 26);
 			this->newToolStripMenuItem->Text = L"New";
 			this->newToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::newToolStripMenuItem_Click);
 			// 
 			// openToolStripMenuItem
 			// 
 			this->openToolStripMenuItem->Name = L"openToolStripMenuItem";
-			this->openToolStripMenuItem->Size = System::Drawing::Size(111, 22);
+			this->openToolStripMenuItem->Size = System::Drawing::Size(117, 26);
 			this->openToolStripMenuItem->Text = L"Open";
 			this->openToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::openToolStripMenuItem_Click);
 			// 
@@ -286,14 +286,14 @@ namespace knowledgeForm {
 			// networkToolStripMenuItem
 			// 
 			this->networkToolStripMenuItem->Name = L"networkToolStripMenuItem";
-			this->networkToolStripMenuItem->Size = System::Drawing::Size(129, 22);
+			this->networkToolStripMenuItem->Size = System::Drawing::Size(181, 26);
 			this->networkToolStripMenuItem->Text = L"Network";
 			this->networkToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::networkToolStripMenuItem_Click);
 			// 
 			// listToolStripMenuItem
 			// 
 			this->listToolStripMenuItem->Name = L"listToolStripMenuItem";
-			this->listToolStripMenuItem->Size = System::Drawing::Size(129, 22);
+			this->listToolStripMenuItem->Size = System::Drawing::Size(181, 26);
 			this->listToolStripMenuItem->Text = L"List";
 			this->listToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::listToolStripMenuItem_Click);
 			// 
@@ -383,7 +383,20 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 	nodeVector.resize(0);
 	std::vector <Edge> edgeVector;
 	edgeVector.resize(0);
-
+	std::vector <button> buttons;
+	std::vector <const char *> btnNames;
+	// { "Add Node", "Add Edge", "Move Child", "Save", "Delete Node", "Delete Edge", "Undo" };
+	int clickedBtn = -999;
+	//poplulate button names vector
+	btnNames.push_back("Add Node");
+	btnNames.push_back("Add Edge");
+	btnNames.push_back("Move Child");
+	btnNames.push_back("Save");
+	btnNames.push_back("Delete Node");
+	btnNames.push_back("Delete Edge");
+	btnNames.push_back("Undo");
+	
+	buttons = createButtons(btnNames);
 	//create input file stream variables
 	std::ifstream nodeFile;
 	std::ifstream edgeFile;
@@ -396,8 +409,10 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 	float tempX = 0;
 	float tempY = 0;
 	bool nodeActivated = false;
+	bool btnActivated = false;
 	bool transition = false;
 	int activeNode = 0;
+	int activeBtn = 0;
 	bool done = false; //used for exiting "game loop"
 	std::string nodeFileName;
 	std::string edgeFileName;
@@ -460,7 +475,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 		nodeVector.push_back(tempNode);//place temp node into vector of node objects
 	}
 
-	//nodeVector.pop_back();
 
 	nodeFile.close();//close file containing saved nodes
 
@@ -508,7 +522,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 	drawBackground(translateX, translateY);
 	drawEdges(nodeVector, edgeVector, translateX, translateY);
 	drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-	drawMenu(0, font);
+	drawButtons(buttons, font, clickedBtn, btnNames);
 	al_flip_display();
 
 	//int zoom;
@@ -519,93 +533,43 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 	while (!done)
 	{
 		ALLEGRO_EVENT events; // create event variable
-
+		const char * exportMessage = "Files Exported";
+		const char * moveChildrenMessage = "Moving Node and Children...";
+		const char * addNodeMessage = "Adding Node...";
+		const char * addEdgeMessage = "Adding Edge...";
+		const char * deleteNodeMessage = "Deleting Node...";
+		const char * deleteEdgeMessage = "Deleting Edge...";
+		const char * panMessage = "Panning...";
+		const char * undoMessage = "Last Change Undone";
 		//zoom = events.mouse.w;
 
 		al_wait_for_event(event_queue, &events);
 
-		//if (events.type == ALLEGRO_EVENT_MOUSE_AXES)
-		//{
-		//	al_clear_to_color(WINDOW_COLOR);
-		//	drawBackground(translateX, translateY);
-		//	drawEdges(nodeVector, edgeVector, translateX, translateY);
-		//	drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-		//	al_draw_circle(events.mouse.x, events.mouse.y, NODE_HEIGHT, al_map_rgb(0, 0, 0), EDGE_WIDTH);
-		//	al_flip_display();
-		//}
-
 		if (events.type == ALLEGRO_EVENT_KEY_DOWN)
 		{
 			al_clear_to_color(WINDOW_COLOR);
-			const char * exportMessage = "Files Exported.";
-			const char * moveChildrenMessage = "Moving Node and Children...";
-			const char * addNodeMessage = "Adding Node...";
-			const char * addEdgeMessage = "Adding Edge...";
-			const char * deleteNodeMessage = "Deleting Node...";
-			const char * deleteEdgeMessage = "Deleting Edge...";
-			const char * panMessage = "Panning...";
-			const char * undoMessage = "Last Change Undone";
+
 
 			switch (events.keyboard.keycode)
 			{
 
-				//case ALLEGRO_KEY_R:
-				//	nodeVector = RearrangeDiagram(nodeVector, edgeVector);
-				//	break;
-
 			case ALLEGRO_KEY_U:
 				undoChange(nodeVector, copyNode, edgeVector, copyEdge);				
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				al_draw_text(font, FONT_COLOR, 0, 0, 0, undoMessage);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				al_flip_display();
+				drawScreen(translateX, translateY, font, undoMessage, nodeVector, edgeVector, subFont,buttons, font,clickedBtn,btnNames);
 				break;
 
 			case ALLEGRO_KEY_F1:
 				ExportNodesEdges(nodeVector, edgeVector, nodeFileName, edgeFileName);
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				al_draw_text(font, FONT_COLOR, 0, 0, 0, exportMessage);
-				//redrawNodesEdges(nodeVector, edgeVector);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0, font);
-				al_flip_display();
-				//drawMenu(4);
+				drawScreen(translateX, translateY, font, exportMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				break;
 			case ALLEGRO_KEY_LCTRL:
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				al_draw_text(font, FONT_COLOR, 0, 0, 0, moveChildrenMessage);
-				//redrawNodesEdges(nodeVector, edgeVector);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0, font);
-				al_flip_display();
+				drawScreen(translateX, translateY, font, moveChildrenMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);;
 				copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 				nodeVector = moveChildren(nodeVector, edgeVector, event_queue, events, translateX, translateY);
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				//redrawNodesEdges(nodeVector, edgeVector);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0, font);
-				al_flip_display();
-				//drawMenu(3);
-				break;
+				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+
 			case ALLEGRO_KEY_N:
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				al_draw_text(font, FONT_COLOR, 0, 0, 0, addNodeMessage);
-				//redrawNodesEdges(nodeVector, edgeVector);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0, font);
-				al_flip_display();
-				//drawMenu(1);
-				//set temp node text fields
+				drawScreen(translateX, translateY, font, addNodeMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				tempNode.type = context.marshal_as<std::string>(nodeType->Text);
 				tempNode.nickname = context.marshal_as<std::string>(nodeNickname->Text);
 				tempNode.description = context.marshal_as<std::string>(nodeDescription->Text);
@@ -622,161 +586,70 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					Node newNode = addNode(nodeVector, edgeVector, font, event_queue, events, tempNode, translateX, translateY);
 					copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 					nodeVector.emplace(nodeVector.begin(), newNode);
-					al_clear_to_color(WINDOW_COLOR);
-					drawBackground(translateX, translateY);
-					//redrawNodesEdges(nodeVector, edgeVector);
-					drawEdges(nodeVector, edgeVector, translateX, translateY);
-					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-					drawMenu(0, font);
-					al_flip_display();
+					drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				}
 				break;
 
 			case ALLEGRO_KEY_DELETE:
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				al_draw_text(font, FONT_COLOR, 0, 0, 0, deleteNodeMessage);
-				//redrawNodesEdges(nodeVector, edgeVector);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0, font);
-				al_flip_display();
+				drawScreen(translateX, translateY, font, deleteNodeMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 				nodeVector = deleteNode(nodeVector, edgeVector, event_queue, events, translateX, translateY);
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				//redrawNodesEdges(nodeVector, edgeVector);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0, font);
-				al_flip_display();
-				//drawMenu(3);
+				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				break;
 			case ALLEGRO_KEY_BACKSPACE:
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				al_draw_text(font, FONT_COLOR, 0, 0, 0, deleteEdgeMessage);
-				//redrawNodesEdges(nodeVector, edgeVector);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0, font);
-				al_flip_display();
+				drawScreen(translateX, translateY, font, deleteEdgeMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 				edgeVector = deleteEdge(nodeVector, edgeVector, event_queue, events, translateX, translateY);
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				//redrawNodesEdges(nodeVector, edgeVector);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0, font);
-				al_flip_display();
-				//drawMenu(3);
+				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				break;
 
 			case ALLEGRO_KEY_UP:
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				al_draw_text(font, FONT_COLOR, 0, 0, 0, panMessage);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				al_flip_display();
+				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 
 				for (int i = 0; i < PAN_FRAME; i++)
 				{
 					translateY -= WINDOW_Y/4/PAN_FRAME;					
-					al_clear_to_color(WINDOW_COLOR);
-					drawBackground(translateX, translateY);
-					drawEdges(nodeVector, edgeVector, translateX, translateY);
-					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-					drawMenu(0, font);
-					al_flip_display();
+					drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				}
-
-
 				break;
 
 			case ALLEGRO_KEY_DOWN:
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				al_draw_text(font, FONT_COLOR, 0, 0, 0, panMessage);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				al_flip_display();
+				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 
 				for (int i = 0; i < PAN_FRAME; i++)
 				{
 					translateY += WINDOW_Y / 4 / PAN_FRAME;
-					al_clear_to_color(WINDOW_COLOR);
-					drawBackground(translateX, translateY);
-					drawEdges(nodeVector, edgeVector, translateX, translateY);
-					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-					drawMenu(0, font);
-					al_flip_display();
+					drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				}
 
 				break;
 
 			case ALLEGRO_KEY_LEFT:
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				al_draw_text(font, FONT_COLOR, 0, 0, 0, panMessage);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				al_flip_display();
+				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 
 				for (int i = 0; i < PAN_FRAME; i++)
 				{
 					translateX -= WINDOW_Y / 4 / PAN_FRAME;
-					al_clear_to_color(WINDOW_COLOR);
-					drawBackground(translateX, translateY);
-					drawEdges(nodeVector, edgeVector, translateX, translateY);
-					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-					drawMenu(0, font);
-					al_flip_display();
+					drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				}
 
 				break;
 
 			case ALLEGRO_KEY_RIGHT:
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				al_draw_text(font, FONT_COLOR, 0, 0, 0, panMessage);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				al_flip_display();
+				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 
 				for (int i = 0; i < PAN_FRAME; i++)
 				{
 					translateX += WINDOW_Y / 4 / PAN_FRAME;
-					al_clear_to_color(WINDOW_COLOR);
-					drawBackground(translateX, translateY);
-					drawEdges(nodeVector, edgeVector, translateX, translateY);
-					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-					drawMenu(0, font);
-					al_flip_display();
+					drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				}
-
 				break;
 
 			case ALLEGRO_KEY_E:
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				al_draw_text(font, FONT_COLOR, 0, 0, 0, addEdgeMessage);
-				//redrawNodesEdges(nodeVector, edgeVector);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0, font);
-				al_flip_display();
-				//drawMenu(2);
+				drawScreen(translateX, translateY, font, addEdgeMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				al_unregister_event_source(event_queue, al_get_keyboard_event_source());
-				Edge tempEdge = addEdge(nodeVector, edgeVector, event_queue, events, subFont, translateX, translateY);
-				al_clear_to_color(WINDOW_COLOR);
-				drawBackground(translateX, translateY);
-				//redrawNodesEdges(nodeVector, edgeVector);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0, font);
-				al_flip_display();
+				tempEdge = addEdge(nodeVector, edgeVector, event_queue, events, subFont, translateX, translateY);
+				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				al_clear_to_color(WINDOW_COLOR);
 				drawBackground(translateX, translateY);
 				al_register_event_source(event_queue, al_get_keyboard_event_source());
@@ -787,24 +660,14 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 					edgeVector.emplace(edgeVector.begin(), tempEdge);
 				}
-				//else al_draw_text(font, FONT_COLOR, FONT_SIZE, 0 + FONT_SIZE, 0, "Invalid Edge");
-				al_wait_for_event(event_queue, &events);
-				//redrawNodesEdges(nodeVector, edgeVector);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				drawMenu(0, font);
-				al_flip_display();
+				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				break;
 			}
 		}
 
 		if (events.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
 		{
-			al_clear_to_color(WINDOW_COLOR);
-			drawBackground(translateX, translateY);
-			drawEdges(nodeVector, edgeVector, translateX, translateY);
-			drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-			al_flip_display();
+			drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 
 			if (events.mouse.button & 1) //record coordinates of cursor upon clicking mouse button 1
 			{
@@ -818,6 +681,16 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 						nodeActivated = true;
 						activeNode = i;
 
+					}
+				}
+				for (int i = 0; i < buttons.size(); i++)// cycle through button vector
+				{
+					if (tempX - translateX > buttons[i].xCoord && tempX - translateX < buttons[i].xCoord + BTN_WIDTH && tempY - translateY > buttons[i].yCoord && tempY - translateY < buttons[i].yCoord + BTN_HEIGHT)
+					{
+						btnActivated = true;
+						activeBtn = i;
+						nodeActivated = false;
+						drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, i, btnNames);
 					}
 				}
 			}
@@ -844,9 +717,9 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 
 			int translateDeltaX, translateDeltaY;
 			
-			char const * nodeType = nodeVector[activeNode].type.c_str();
-			char const * nodeNickname = nodeVector[activeNode].nickname.c_str();
-			char const * nodeDescription = nodeVector[activeNode].description.c_str();
+			char const * nodeTypeChar = nodeVector[activeNode].type.c_str();
+			char const * nodeNicknameChar = nodeVector[activeNode].nickname.c_str();
+			char const * nodeDescriptionChar = nodeVector[activeNode].description.c_str();
 			//check if mouse drag was greater then the size of a node
 			if (abs(events.mouse.x + translateX - nodeVector[activeNode].x) > NODE_WIDTH || abs(events.mouse.y + translateY - nodeVector[activeNode].y) > NODE_HEIGHT)
 			{
@@ -871,13 +744,13 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					translateY += translateDeltaY;
 					al_clear_to_color(WINDOW_COLOR); //redraw screen
 					drawBackground(translateX, translateY);
-					al_draw_text(font, FONT_COLOR, FONT_SIZE, 0, 0, &nodeType[0]);
-					al_draw_text(font, FONT_COLOR, FONT_SIZE, 1 * FONT_SIZE, 0, &nodeNickname[0]);
-					al_draw_text(font, FONT_COLOR, FONT_SIZE, 2 * FONT_SIZE, 0, &nodeDescription[0]);
+					al_draw_text(font, FONT_COLOR, FONT_SIZE, 0, 0, &nodeTypeChar[0]);
+					al_draw_text(font, FONT_COLOR, FONT_SIZE, 1 * FONT_SIZE, 0, &nodeNicknameChar[0]);
+					al_draw_text(font, FONT_COLOR, FONT_SIZE, 2 * FONT_SIZE, 0, &nodeDescriptionChar[0]);
 					drawEdges(nodeVector, edgeVector, translateX, translateY);
 					drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 					highlightRelatives(activeNode, edgeVector, nodeVector, translateX, translateY);
-					drawMenu(0, font);
+					drawButtons(buttons, font, clickedBtn, btnNames);
 					al_flip_display();
 				}
 			}
@@ -886,20 +759,99 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 
 			al_clear_to_color(WINDOW_COLOR); //redraw screen
 			drawBackground(translateX, translateY);
-			al_draw_text(font, FONT_COLOR, FONT_SIZE, 0, 0, &nodeType[0]);
-			al_draw_text(font, FONT_COLOR, FONT_SIZE, 1 * FONT_SIZE, 0, &nodeNickname[0]);
-			al_draw_text(font, FONT_COLOR, FONT_SIZE, 2 * FONT_SIZE, 0, &nodeDescription[0]);
+			al_draw_text(font, FONT_COLOR, FONT_SIZE, 0, 0, &nodeTypeChar[0]);
+			al_draw_text(font, FONT_COLOR, FONT_SIZE, 1 * FONT_SIZE, 0, &nodeNicknameChar[0]);
+			al_draw_text(font, FONT_COLOR, FONT_SIZE, 2 * FONT_SIZE, 0, &nodeDescriptionChar[0]);
 
 			//redrawNodesEdges(nodeVector, edgeVector);
 			drawEdges(nodeVector, edgeVector, translateX, translateY);
 			drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 			highlightRelatives(activeNode, edgeVector, nodeVector, translateX, translateY);
-			drawMenu(0, font);
+			drawButtons(buttons, font, clickedBtn, btnNames);
 			al_flip_display();
 
 			addressBox->Text = context.marshal_as<System::String ^>(nodeVector[activeNode].fileLocation);
 		}
+		if (events.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP && btnActivated == true)
+		{
 
+			switch (activeBtn)
+			{
+			case 0:
+				drawScreen(translateX, translateY, font, addNodeMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				tempNode.type = context.marshal_as<std::string>(nodeType->Text);
+				tempNode.nickname = context.marshal_as<std::string>(nodeNickname->Text);
+				tempNode.description = context.marshal_as<std::string>(nodeDescription->Text);
+				if (tempNode.type == "Document")
+				{
+					tempNode.fileLocation = context.marshal_as<std::string>(nodeFileLocation->Text);
+				}
+
+				al_flush_event_queue(event_queue);//clear event queue
+				while (events.keyboard.keycode != ALLEGRO_KEY_ESCAPE && events.type != ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) al_wait_for_event(event_queue, &events);//wait for esc to cancel or mouse button to insert new node
+
+				if (events.mouse.button & 1)
+				{
+					Node newNode = addNode(nodeVector, edgeVector, font, event_queue, events, tempNode, translateX, translateY);
+					copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
+					nodeVector.emplace(nodeVector.begin(), newNode);
+					drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				}
+				break;
+
+			case 1:
+				drawScreen(translateX, translateY, font, addEdgeMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				al_unregister_event_source(event_queue, al_get_keyboard_event_source());	
+				tempEdge = addEdge(nodeVector, edgeVector, event_queue, events, subFont, translateX, translateY);
+				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				al_clear_to_color(WINDOW_COLOR);
+				drawBackground(translateX, translateY);
+				al_register_event_source(event_queue, al_get_keyboard_event_source());
+				if (tempEdge.parent >= 0
+					&& tempEdge.child >= 0
+					&& tempEdge.child != tempEdge.parent)
+				{
+					copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
+					edgeVector.emplace(edgeVector.begin(), tempEdge);
+				}
+				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				break;
+
+			case 2:
+				drawScreen(translateX, translateY, font, moveChildrenMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);;
+				copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
+				while (events.type != ALLEGRO_EVENT_MOUSE_BUTTON_UP) al_wait_for_event(event_queue, &events);//wait for MOUSE UP event
+				nodeVector = moveChildren(nodeVector, edgeVector, event_queue, events, translateX, translateY);
+				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				break;
+
+			case 3:
+				ExportNodesEdges(nodeVector, edgeVector, nodeFileName, edgeFileName);
+				drawScreen(translateX, translateY, font, exportMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				break;
+
+			case 4:
+				drawScreen(translateX, translateY, font, deleteNodeMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				while (events.type != ALLEGRO_EVENT_MOUSE_BUTTON_UP) al_wait_for_event(event_queue, &events);//wait for MOUSE UP event
+				copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
+				nodeVector = deleteNode(nodeVector, edgeVector, event_queue, events, translateX, translateY);
+				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				break;
+			case 5:
+				drawScreen(translateX, translateY, font, deleteEdgeMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
+				edgeVector = deleteEdge(nodeVector, edgeVector, event_queue, events, translateX, translateY);
+				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				break;
+
+			case 6:
+				undoChange(nodeVector, copyNode, edgeVector, copyEdge);
+				drawScreen(translateX, translateY, font, undoMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				break;
+			}
+
+			btnActivated = false;
+		}
 		if (events.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP && transition == true)
 		{
 			std::vector<nodeTransition> parentTrans;
@@ -931,18 +883,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 						}
 					}
 				}
-				al_clear_to_color(WINDOW_COLOR); //redraw screen
-				drawBackground(translateX, translateY);
-				//al_draw_text(font, FONT_COLOR, FONT_SIZE, 0, 0, &nodeType[0]);
-				//al_draw_text(font, FONT_COLOR, FONT_SIZE, 1 * FONT_SIZE, 0, &nodeNickname[0]);
-				//al_draw_text(font, FONT_COLOR, FONT_SIZE, 2 * FONT_SIZE, 0, &nodeDescription[0]);
-
-				//redrawNodesEdges(nodeVector, edgeVector);
-				drawEdges(nodeVector, edgeVector, translateX, translateY);
-				drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
-				highlightRelatives(activeNode, edgeVector, nodeVector, translateX, translateY);
-				drawMenu(0, font);
-				al_flip_display();
+				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 			}
 
 			transition = false;

@@ -47,6 +47,10 @@
 #define PARENT_OFFSET -125
 #define CHILD_OFFSET 125
 #define BOX_SIZE 125
+#define BTN_HEIGHT 40
+#define BTN_WIDTH 130
+#define CLICKED_BTN_COLOR al_map_rgb(200,200,200)
+#define BTN_COLOR al_map_rgb(150,150,150)
 
 class Node
 {
@@ -55,7 +59,6 @@ public:
 	int id;
 	std::string type, nickname, description, fileLocation;
 };
-
 class Edge
 {
 public:
@@ -82,6 +85,13 @@ public:
 	}
 };
 
+class button
+{
+public:
+	int xCoord, yCoord;
+	std::string text;
+};
+
 void drawEdges(std::vector<Node> tempNodeVector, std::vector<Edge> tempEdgeVector,int translateX, int translateY);
 void drawNodes(std::vector<Node> tempNodeVector, ALLEGRO_FONT *subFont, std::vector<Edge> tempEdgeVector, int translateX, int translateY);
 void ExportNodesEdges(std::vector<Node>, std::vector<Edge>, std::string nodeFileName, std::string edgeFileName);
@@ -101,3 +111,6 @@ std::vector<nodeTransition> parentTransition(std::vector<Node> &nodeVector, std:
 std::vector<nodeTransition> childTransition(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, Node selectedNode);
 void copyVectors(std::vector<Node> &origNode, std::vector<Node> &copyNode, std::vector<Edge> &origEdge, std::vector<Edge> &copyEdge);
 void undoChange(std::vector<Node> &origNode, std::vector<Node> &copyNode, std::vector<Edge> &origEdge, std::vector<Edge> &copyEdge);
+std::vector<button> createButtons(std::vector<const char *> btnNames);
+void drawButtons(std::vector<button> buttons, ALLEGRO_FONT *btnFont, int clickedBtnIndex, std::vector<const char *> btnNames);
+void drawScreen(int translateX, int translateY, ALLEGRO_FONT *font, const char * message, std::vector<Node> nodeVector, std::vector<Edge> edgeVector, ALLEGRO_FONT * subFont, std::vector<button> buttons, ALLEGRO_FONT *btnFont, int clickedBtnIndex, std::vector<const char *> btnNames);
