@@ -958,3 +958,32 @@ void drawScreen(int translateX, int translateY, ALLEGRO_FONT *font, const char *
 	drawButtons(buttons, btnFont, clickedBtnIndex, btnNames);
 	al_flip_display();
 }
+void openDocument(ALLEGRO_EVENT events, int translateX, int translateY, std::vector<Node> &nodeVector, int &activeNode, ALLEGRO_EVENT_QUEUE * event_queue)
+{
+	events.type = 0;
+	int tempX, tempY;
+	bool nodeActivated = false;
+	while (events.type != ALLEGRO_EVENT_MOUSE_BUTTON_UP)
+	{
+		al_wait_for_event(event_queue, &events);
+		if (events.mouse.button & 1) //check for a right click event
+		{
+			//store coordinates of mouse 
+			tempX = events.mouse.x + translateX;
+			tempY = events.mouse.y + translateY;
+
+			//check if a document node was clicked
+			for (int i = 0; i < nodeVector.size(); i++)
+			{
+				if (tempX > nodeVector[i].x && tempX < nodeVector[i].x + NODE_WIDTH && tempY > nodeVector[i].y && tempY < nodeVector[i].y + NODE_HEIGHT && nodeVector[i].type == "Document")
+				{
+					nodeActivated = true;
+					activeNode = i;
+					al_clear_to_color(WINDOW_COLOR);
+					al_flip_display();
+				}
+			}
+
+		}
+	}
+}

@@ -390,7 +390,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 	//poplulate button names vector
 	btnNames.push_back("Add Node");
 	btnNames.push_back("Add Edge");
-	btnNames.push_back("Move Child");
+	btnNames.push_back("Open Doc");
 	btnNames.push_back("Save");
 	btnNames.push_back("Delete Node");
 	btnNames.push_back("Delete Edge");
@@ -541,6 +541,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 		const char * deleteEdgeMessage = "Deleting Edge...";
 		const char * panMessage = "Panning...";
 		const char * undoMessage = "Last Change Undone";
+		const char * openDocMessage = "Choose Document to Open";
 		//zoom = events.mouse.w;
 
 		al_wait_for_event(event_queue, &events);
@@ -590,6 +591,15 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				}
 				break;
 
+			case ALLEGRO_KEY_O:
+			
+				drawScreen(translateX, translateY, font, openDocMessage,nodeVector,edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				openDocument(events, translateX, translateY, nodeVector, activeNode, event_queue);
+				addressBox->Text = context.marshal_as<System::String ^>(nodeVector[activeNode].fileLocation);
+				webBrowser1->Navigate(context.marshal_as<System::String ^>(nodeVector[activeNode].fileLocation));
+				done = true;
+
+				break;
 			case ALLEGRO_KEY_DELETE:
 				drawScreen(translateX, translateY, font, deleteNodeMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
@@ -818,11 +828,11 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				break;
 
 			case 2:
-				drawScreen(translateX, translateY, font, moveChildrenMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);;
-				copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
-				while (events.type != ALLEGRO_EVENT_MOUSE_BUTTON_UP) al_wait_for_event(event_queue, &events);//wait for MOUSE UP event
-				nodeVector = moveChildren(nodeVector, edgeVector, event_queue, events, translateX, translateY);
-				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				drawScreen(translateX, translateY, font, openDocMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				openDocument(events, translateX, translateY, nodeVector, activeNode, event_queue);
+				addressBox->Text = context.marshal_as<System::String ^>(nodeVector[activeNode].fileLocation);
+				webBrowser1->Navigate(context.marshal_as<System::String ^>(nodeVector[activeNode].fileLocation));
+				done = true;
 				break;
 
 			case 3:
@@ -893,7 +903,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 		if (events.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
 		{
 			done = true;
-			if (!addressBox->Text->Length == 0)	webBrowser1->Navigate(context.marshal_as<System::String ^>(nodeVector[activeNode].fileLocation));
 		}
 	}
 
