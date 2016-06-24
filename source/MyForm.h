@@ -1,4 +1,12 @@
+#ifndef MYHEADER_H
+#define MYHEADER_H
 #include "myHeader.h"
+#endif
+#pragma once
+#ifndef MY_FORM_H
+#define MY_FORM_H
+#include "MyForm.h"
+#endif
 #pragma once
 
 namespace knowledgeForm {
@@ -73,6 +81,23 @@ namespace knowledgeForm {
 	private: System::Windows::Forms::ToolStripMenuItem^  listToolStripMenuItem;
 	private: System::Windows::Forms::OpenFileDialog^  openFileDialog3;
 	private: System::Windows::Forms::Button^  button1;
+
+	private: System::Windows::Forms::Button^  stageBtn;
+	private: System::Windows::Forms::Label^  label2;
+
+
+
+
+
+
+	private: System::Windows::Forms::ListBox^  nodeQueueLst;
+
+
+
+
+
+
+
 	protected:
 
 	private:
@@ -113,6 +138,9 @@ namespace knowledgeForm {
 			this->listToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->openFileDialog3 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->stageBtn = (gcnew System::Windows::Forms::Button());
+			this->label2 = (gcnew System::Windows::Forms::Label());
+			this->nodeQueueLst = (gcnew System::Windows::Forms::ListBox());
 			this->menuStrip1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -137,7 +165,7 @@ namespace knowledgeForm {
 			this->nodeNickname->Location = System::Drawing::Point(102, 159);
 			this->nodeNickname->Name = L"nodeNickname";
 			this->nodeNickname->ReadOnly = true;
-			this->nodeNickname->Size = System::Drawing::Size(727, 22);
+			this->nodeNickname->Size = System::Drawing::Size(703, 22);
 			this->nodeNickname->TabIndex = 7;
 			// 
 			// nodeDescription
@@ -145,7 +173,7 @@ namespace knowledgeForm {
 			this->nodeDescription->Location = System::Drawing::Point(102, 199);
 			this->nodeDescription->Name = L"nodeDescription";
 			this->nodeDescription->ReadOnly = true;
-			this->nodeDescription->Size = System::Drawing::Size(727, 22);
+			this->nodeDescription->Size = System::Drawing::Size(703, 22);
 			this->nodeDescription->TabIndex = 8;
 			// 
 			// nodeFileLocation
@@ -153,7 +181,7 @@ namespace knowledgeForm {
 			this->nodeFileLocation->Location = System::Drawing::Point(102, 237);
 			this->nodeFileLocation->Name = L"nodeFileLocation";
 			this->nodeFileLocation->ReadOnly = true;
-			this->nodeFileLocation->Size = System::Drawing::Size(727, 22);
+			this->nodeFileLocation->Size = System::Drawing::Size(666, 22);
 			this->nodeFileLocation->TabIndex = 9;
 			// 
 			// label4
@@ -286,14 +314,14 @@ namespace knowledgeForm {
 			// networkToolStripMenuItem
 			// 
 			this->networkToolStripMenuItem->Name = L"networkToolStripMenuItem";
-			this->networkToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->networkToolStripMenuItem->Size = System::Drawing::Size(135, 26);
 			this->networkToolStripMenuItem->Text = L"Network";
 			this->networkToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::networkToolStripMenuItem_Click);
 			// 
 			// listToolStripMenuItem
 			// 
 			this->listToolStripMenuItem->Name = L"listToolStripMenuItem";
-			this->listToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->listToolStripMenuItem->Size = System::Drawing::Size(135, 26);
 			this->listToolStripMenuItem->Text = L"List";
 			this->listToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::listToolStripMenuItem_Click);
 			// 
@@ -303,19 +331,50 @@ namespace knowledgeForm {
 			// 
 			// button1
 			// 
-			this->button1->Location = System::Drawing::Point(836, 240);
+			this->button1->Location = System::Drawing::Point(774, 236);
 			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(75, 23);
+			this->button1->Size = System::Drawing::Size(31, 23);
 			this->button1->TabIndex = 23;
-			this->button1->Text = L"Browse...";
+			this->button1->Text = L"...";
 			this->button1->UseVisualStyleBackColor = true;
 			this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
+			// 
+			// stageBtn
+			// 
+			this->stageBtn->Location = System::Drawing::Point(812, 159);
+			this->stageBtn->Name = L"stageBtn";
+			this->stageBtn->Size = System::Drawing::Size(38, 100);
+			this->stageBtn->TabIndex = 25;
+			this->stageBtn->Text = L">>";
+			this->stageBtn->UseVisualStyleBackColor = true;
+			this->stageBtn->Click += gcnew System::EventHandler(this, &MyForm::stageBtn_Click);
+			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Location = System::Drawing::Point(853, 50);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(98, 17);
+			this->label2->TabIndex = 26;
+			this->label2->Text = L"Staged Nodes";
+			// 
+			// nodeQueueLst
+			// 
+			this->nodeQueueLst->FormattingEnabled = true;
+			this->nodeQueueLst->ItemHeight = 16;
+			this->nodeQueueLst->Location = System::Drawing::Point(856, 70);
+			this->nodeQueueLst->Name = L"nodeQueueLst";
+			this->nodeQueueLst->Size = System::Drawing::Size(186, 196);
+			this->nodeQueueLst->TabIndex = 28;
 			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1081, 847);
+			this->Controls->Add(this->nodeQueueLst);
+			this->Controls->Add(this->label2);
+			this->Controls->Add(this->stageBtn);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->goButton);
 			this->Controls->Add(this->addressBox);
@@ -404,7 +463,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 	// usefule temporary variables
 	Node tempNode;
 	Edge tempEdge;
-	std::string tempString;
+	std::string tempString, delimiter;
 	int tempId = 0;
 	float tempX = 0;
 	float tempY = 0;
@@ -419,6 +478,9 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 	int zoomScalar = 0;
 	int translateX = 0;
 	int translateY = 0;
+	std::vector<Node> nodeQueueVector;
+	int nodeQueueIndex = 0;
+
 
 	std::stringstream ss;
 	ss.str("");
@@ -446,6 +508,22 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 	msclr::interop::marshal_context context;
 	nodeFileName = context.marshal_as<std::string>(nodeFileTextBox->Text) + "/" + "nodes.csv";
 	edgeFileName = context.marshal_as<std::string>(nodeFileTextBox->Text) + "/" + "edges.csv";
+
+	//get nodeQueueLst items, format them and place them in a vector
+	for (int i = 0; i < nodeQueueLst->Items->Count; i++)
+	{
+		nodeQueueLst->SelectedIndex = i;
+		tempString = context.marshal_as<std::string>(nodeQueueLst->Text);
+		ss << tempString;
+		std::getline(ss, tempNode.type, '|');
+		std::getline(ss, tempNode.nickname, '|');
+		std::getline(ss, tempNode.description, '|');
+		std::getline(ss, tempNode.fileLocation, '|');
+		ss.str("");
+		ss.clear();
+		nodeQueueVector.push_back(tempNode);
+	}
+	nodeQueueLst->Items->Clear();
 
 	nodeFile.open(nodeFileName);//open file containing previously saved nodes
 	//read data from opened file and put into temporary node object
@@ -509,7 +587,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 	al_init_ttf_addon();
 
 	ALLEGRO_FONT *font = al_load_ttf_font(FONT_TYPE, FONT_SIZE, NULL); //create a font for Allegro Display
-	ALLEGRO_FONT *subFont = al_load_font(FONT_TYPE, NODE_WIDTH, NULL); //create a font for Allegro Display
+	ALLEGRO_FONT *subFont = al_load_ttf_font(FONT_TYPE, NODE_WIDTH, NULL); //create a font for Allegro Display
 
 	ALLEGRO_EVENT_QUEUE *event_queue = al_create_event_queue();//create an event queue to store input
 
@@ -533,15 +611,15 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 	while (!done)
 	{
 		ALLEGRO_EVENT events; // create event variable
-		const char * exportMessage = "Files Exported";
-		const char * moveChildrenMessage = "Moving Node and Children...";
-		const char * addNodeMessage = "Adding Node...";
-		const char * addEdgeMessage = "Adding Edge...";
-		const char * deleteNodeMessage = "Deleting Node...";
-		const char * deleteEdgeMessage = "Deleting Edge...";
-		const char * panMessage = "Panning...";
-		const char * undoMessage = "Last Change Undone";
-		const char * openDocMessage = "Choose Document to Open";
+		char const * exportMessage = "Files Exported";
+		char const * moveChildrenMessage = "Moving Node and Children...";
+		char const * addNodeMessage = "Adding Node...";
+		char const * addEdgeMessage = "Adding Edge...";
+		char const * deleteNodeMessage = "Deleting Node...";
+		char const * deleteEdgeMessage = "Deleting Edge...";
+		char const * panMessage = "Panning...";
+		char const * undoMessage = "Last Change Undone";
+		char const * openDocMessage = "Choose Document to Open";
 		//zoom = events.mouse.w;
 
 		al_wait_for_event(event_queue, &events);
@@ -567,13 +645,15 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawScreen(translateX, translateY, font, moveChildrenMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);;
 				copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 				nodeVector = moveChildren(nodeVector, edgeVector, event_queue, events, translateX, translateY);
-				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 
 			case ALLEGRO_KEY_N:
 				drawScreen(translateX, translateY, font, addNodeMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
-				tempNode.type = context.marshal_as<std::string>(nodeType->Text);
-				tempNode.nickname = context.marshal_as<std::string>(nodeNickname->Text);
-				tempNode.description = context.marshal_as<std::string>(nodeDescription->Text);
+				if (nodeQueueVector.size() == 0 || nodeQueueIndex >= nodeQueueVector.size())
+				{
+					break;
+				}
+				tempNode = nodeQueueVector[nodeQueueIndex];
 				if (tempNode.type == "Document")
 				{
 					tempNode.fileLocation = context.marshal_as<std::string>(nodeFileLocation->Text);
@@ -587,8 +667,9 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					Node newNode = addNode(nodeVector, edgeVector, font, event_queue, events, tempNode, translateX, translateY);
 					copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 					nodeVector.emplace(nodeVector.begin(), newNode);
-					drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+					drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				}
+				nodeQueueIndex++;
 				break;
 
 			case ALLEGRO_KEY_O:
@@ -598,60 +679,60 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				addressBox->Text = context.marshal_as<System::String ^>(nodeVector[activeNode].fileLocation);
 				webBrowser1->Navigate(context.marshal_as<System::String ^>(nodeVector[activeNode].fileLocation));
 				done = true;
-
 				break;
+
 			case ALLEGRO_KEY_DELETE:
 				drawScreen(translateX, translateY, font, deleteNodeMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 				nodeVector = deleteNode(nodeVector, edgeVector, event_queue, events, translateX, translateY);
-				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				break;
 			case ALLEGRO_KEY_BACKSPACE:
 				drawScreen(translateX, translateY, font, deleteEdgeMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 				edgeVector = deleteEdge(nodeVector, edgeVector, event_queue, events, translateX, translateY);
-				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				break;
 
 			case ALLEGRO_KEY_UP:
-				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 
 				for (int i = 0; i < PAN_FRAME; i++)
 				{
 					translateY -= WINDOW_Y/4/PAN_FRAME;					
-					drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+					drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				}
 				break;
 
 			case ALLEGRO_KEY_DOWN:
-				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 
 				for (int i = 0; i < PAN_FRAME; i++)
 				{
 					translateY += WINDOW_Y / 4 / PAN_FRAME;
-					drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+					drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				}
 
 				break;
 
 			case ALLEGRO_KEY_LEFT:
-				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 
 				for (int i = 0; i < PAN_FRAME; i++)
 				{
 					translateX -= WINDOW_Y / 4 / PAN_FRAME;
-					drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+					drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				}
 
 				break;
 
 			case ALLEGRO_KEY_RIGHT:
-				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 
 				for (int i = 0; i < PAN_FRAME; i++)
 				{
 					translateX += WINDOW_Y / 4 / PAN_FRAME;
-					drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+					drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				}
 				break;
 
@@ -659,7 +740,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawScreen(translateX, translateY, font, addEdgeMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				al_unregister_event_source(event_queue, al_get_keyboard_event_source());
 				tempEdge = addEdge(nodeVector, edgeVector, event_queue, events, subFont, translateX, translateY);
-				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				al_clear_to_color(WINDOW_COLOR);
 				drawBackground(translateX, translateY);
 				al_register_event_source(event_queue, al_get_keyboard_event_source());
@@ -670,14 +751,14 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 					edgeVector.emplace(edgeVector.begin(), tempEdge);
 				}
-				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				break;
 			}
 		}
 
 		if (events.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
 		{
-			drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+			drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 
 			if (events.mouse.button & 1) //record coordinates of cursor upon clicking mouse button 1
 			{
@@ -700,7 +781,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 						btnActivated = true;
 						activeBtn = i;
 						nodeActivated = false;
-						drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, i, btnNames);
+						drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, i, btnNames);
 					}
 				}
 			}
@@ -805,7 +886,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					Node newNode = addNode(nodeVector, edgeVector, font, event_queue, events, tempNode, translateX, translateY);
 					copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 					nodeVector.emplace(nodeVector.begin(), newNode);
-					drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+					drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				}
 				break;
 
@@ -813,7 +894,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				drawScreen(translateX, translateY, font, addEdgeMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				al_unregister_event_source(event_queue, al_get_keyboard_event_source());	
 				tempEdge = addEdge(nodeVector, edgeVector, event_queue, events, subFont, translateX, translateY);
-				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				al_clear_to_color(WINDOW_COLOR);
 				drawBackground(translateX, translateY);
 				al_register_event_source(event_queue, al_get_keyboard_event_source());
@@ -824,7 +905,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 					edgeVector.emplace(edgeVector.begin(), tempEdge);
 				}
-				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				break;
 
 			case 2:
@@ -845,13 +926,13 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 				while (events.type != ALLEGRO_EVENT_MOUSE_BUTTON_UP) al_wait_for_event(event_queue, &events);//wait for MOUSE UP event
 				copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 				nodeVector = deleteNode(nodeVector, edgeVector, event_queue, events, translateX, translateY);
-				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				break;
 			case 5:
 				drawScreen(translateX, translateY, font, deleteEdgeMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				copyVectors(nodeVector, copyNode, edgeVector, copyEdge);
 				edgeVector = deleteEdge(nodeVector, edgeVector, event_queue, events, translateX, translateY);
-				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				break;
 
 			case 6:
@@ -893,7 +974,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 						}
 					}
 				}
-				drawScreen(translateX, translateY, font, NULL, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
+				drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 			}
 
 			transition = false;
@@ -1169,6 +1250,18 @@ private: System::Void nodeType_SelectedIndexChanged(System::Object^  sender, Sys
 		this->nodeFileLocation->ReadOnly = true;
 	}
 
+}
+private: System::Void stageBtn_Click(System::Object^  sender, System::EventArgs^  e) 
+{
+	std::string nodeBuffer;
+	msclr::interop::marshal_context context;
+	nodeBuffer = context.marshal_as<std::string>(nodeType->Text);
+	nodeBuffer += '|' + context.marshal_as<std::string>(nodeNickname->Text);
+	nodeBuffer += '|' + context.marshal_as<std::string>(nodeDescription->Text);
+	nodeBuffer += '|' + context.marshal_as<std::string>(nodeFileLocation->Text);
+
+	this->nodeQueueLst->Items->Add(context.marshal_as<System::String ^>(nodeBuffer));
+	
 }
 }
 ; 

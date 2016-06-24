@@ -1,4 +1,7 @@
+#ifndef MYHEADER_H
+#define MYHEADER_H
 #include "myHeader.h"
+#endif
 
 void drawEdges(std::vector<Node> tempNodeVector, std::vector<Edge> tempEdgeVector, int translateX, int translateY)
 {
@@ -51,8 +54,7 @@ And it will:
 		al_draw_line(xParentTranslated + NODE_WIDTH / 2, yParentTranslated + NODE_HEIGHT / 2, xChildTranslated + NODE_WIDTH / 2, yChildTranslated + NODE_HEIGHT / 2, EDGE_COLOR, EDGE_WIDTH);
 	}
 }
-
-void drawNodes(std::vector<Node> tempNodeVector, ALLEGRO_FONT *subFont, std::vector<Edge> tempEdgeVector, int translateX, int translateY)
+void drawNodes(std::vector<Node> tempNodeVector,ALLEGRO_FONT *subFont, std::vector<Edge> tempEdgeVector, int translateX, int translateY)
 {
 /*
 Give this function:
@@ -137,7 +139,6 @@ And it will:
 		}
 	}
 }
-
 void ExportNodesEdges(std::vector<Node> tempNodeVector, std::vector<Edge> tempEdgeVector, std::string nodeFileName, std::string edgeFileName)
 {
 /*
@@ -175,7 +176,6 @@ And it will:
 		}
 	}
 }
-
 Node addNode(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, ALLEGRO_FONT *font, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, Node tempNode, int translateX, int translateY)
 {
 /*
@@ -205,7 +205,6 @@ And it will:
 	else tempNode.id = 0;
 	return tempNode;
 }
-
 Edge addEdge(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, ALLEGRO_FONT * subFont, int translateX, int translateY)
 {
 /*
@@ -289,7 +288,6 @@ And it will:
 	}
 	return tempEdge;
 }
-
 std::vector<Node> moveChildren(std::vector<Node> nodeVector, std::vector<Edge> edgeVector, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, int translateX, int translateY)
 {	
 /*
@@ -367,7 +365,6 @@ And it will:
 
 	return nodeVector;
 }
-
 void drawMenu(int i, ALLEGRO_FONT *menuFont)
 {
 /*
@@ -425,7 +422,6 @@ And it will:
 		j++;
 	}
 }
-
 std::vector<Node> deleteNode(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, int translateX, int translateY)
 {
 /*
@@ -487,7 +483,6 @@ And it will:
 
 	return nodeVector;
 }
-
 std::vector<Edge> deleteEdge(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, int translateX, int translateY)
 {
 /*
@@ -948,11 +943,21 @@ void drawButtons(std::vector<button> buttons, ALLEGRO_FONT *btnFont, int clicked
 
 	}
 }
-void drawScreen(int translateX, int translateY, ALLEGRO_FONT *font, const char * message, std::vector<Node> nodeVector, std::vector<Edge> edgeVector, ALLEGRO_FONT * subFont, std::vector<button> buttons, ALLEGRO_FONT *btnFont, int clickedBtnIndex, std::vector<const char *> btnNames)
+void drawScreen(int translateX, int translateY, ALLEGRO_FONT *font, char const * message, std::vector<Node> nodeVector, std::vector<Edge> edgeVector, ALLEGRO_FONT * subFont, std::vector<button> buttons, ALLEGRO_FONT *btnFont, int clickedBtnIndex, std::vector<const char *> btnNames)
 {
 	al_clear_to_color(WINDOW_COLOR);
 	drawBackground(translateX, translateY);
 	al_draw_text(font, FONT_COLOR, 0, 0, 0, message);
+	drawEdges(nodeVector, edgeVector, translateX, translateY);
+	drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
+	drawButtons(buttons, btnFont, clickedBtnIndex, btnNames);
+	al_flip_display();
+}
+void drawScreen(int translateX, int translateY, ALLEGRO_FONT *font, std::vector<Node> nodeVector, std::vector<Edge> edgeVector, ALLEGRO_FONT * subFont, std::vector<button> buttons, ALLEGRO_FONT *btnFont, int clickedBtnIndex, std::vector<const char *> btnNames)
+{
+	al_clear_to_color(WINDOW_COLOR);
+	drawBackground(translateX, translateY);
+//	al_draw_text(font, FONT_COLOR, 0, 0, 0, NULL);
 	drawEdges(nodeVector, edgeVector, translateX, translateY);
 	drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
 	drawButtons(buttons, btnFont, clickedBtnIndex, btnNames);

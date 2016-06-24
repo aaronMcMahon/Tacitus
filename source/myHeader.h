@@ -84,14 +84,12 @@ public:
 		return delta;
 	}
 };
-
 class button
 {
 public:
 	int xCoord, yCoord;
 	std::string text;
 };
-
 void drawEdges(std::vector<Node> tempNodeVector, std::vector<Edge> tempEdgeVector,int translateX, int translateY);
 void drawNodes(std::vector<Node> tempNodeVector, ALLEGRO_FONT *subFont, std::vector<Edge> tempEdgeVector, int translateX, int translateY);
 void ExportNodesEdges(std::vector<Node>, std::vector<Edge>, std::string nodeFileName, std::string edgeFileName);
@@ -114,4 +112,5 @@ void undoChange(std::vector<Node> &origNode, std::vector<Node> &copyNode, std::v
 std::vector<button> createButtons(std::vector<const char *> btnNames);
 void drawButtons(std::vector<button> buttons, ALLEGRO_FONT *btnFont, int clickedBtnIndex, std::vector<const char *> btnNames);
 void drawScreen(int translateX, int translateY, ALLEGRO_FONT *font, const char * message, std::vector<Node> nodeVector, std::vector<Edge> edgeVector, ALLEGRO_FONT * subFont, std::vector<button> buttons, ALLEGRO_FONT *btnFont, int clickedBtnIndex, std::vector<const char *> btnNames);
+void drawScreen(int translateX, int translateY, ALLEGRO_FONT *font, std::vector<Node> nodeVector, std::vector<Edge> edgeVector, ALLEGRO_FONT * subFont, std::vector<button> buttons, ALLEGRO_FONT *btnFont, int clickedBtnIndex, std::vector<const char *> btnNames);
 void openDocument(ALLEGRO_EVENT events, int translateX, int translateY, std::vector<Node> &nodeVector, int &activeNode, ALLEGRO_EVENT_QUEUE * event_queue);
