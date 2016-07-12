@@ -654,10 +654,6 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					break;
 				}
 				tempNode = nodeQueueVector[nodeQueueIndex];
-				if (tempNode.type == "Document")
-				{
-					tempNode.fileLocation = context.marshal_as<std::string>(nodeFileLocation->Text);
-				}
 
 				al_flush_event_queue(event_queue);//clear event queue
 				while (events.keyboard.keycode != ALLEGRO_KEY_ESCAPE && events.type != ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) al_wait_for_event(event_queue, &events);//wait for esc to cancel or mouse button to insert new node
@@ -870,13 +866,11 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 			{
 			case 0:
 				drawScreen(translateX, translateY, font, addNodeMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
-				tempNode.type = context.marshal_as<std::string>(nodeType->Text);
-				tempNode.nickname = context.marshal_as<std::string>(nodeNickname->Text);
-				tempNode.description = context.marshal_as<std::string>(nodeDescription->Text);
-				if (tempNode.type == "Document")
+				if (nodeQueueVector.size() == 0 || nodeQueueIndex >= nodeQueueVector.size())
 				{
-					tempNode.fileLocation = context.marshal_as<std::string>(nodeFileLocation->Text);
+					break;
 				}
+				tempNode = nodeQueueVector[nodeQueueIndex];
 
 				al_flush_event_queue(event_queue);//clear event queue
 				while (events.keyboard.keycode != ALLEGRO_KEY_ESCAPE && events.type != ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) al_wait_for_event(event_queue, &events);//wait for esc to cancel or mouse button to insert new node
@@ -888,7 +882,9 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 					nodeVector.emplace(nodeVector.begin(), newNode);
 					drawScreen(translateX, translateY, font, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
 				}
+				nodeQueueIndex++;
 				break;
+
 
 			case 1:
 				drawScreen(translateX, translateY, font, addEdgeMessage, nodeVector, edgeVector, subFont, buttons, font, clickedBtn, btnNames);
