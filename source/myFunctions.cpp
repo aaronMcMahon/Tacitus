@@ -1,4 +1,7 @@
+#ifndef MYHEADER_H
+#define MYHEADER_H
 #include "myHeader.h"
+#endif
 
 void drawEdges(std::vector<Node> tempNodeVector, std::vector<Edge> tempEdgeVector, int translateX, int translateY)
 {
@@ -51,8 +54,7 @@ And it will:
 		al_draw_line(xParentTranslated + NODE_WIDTH / 2, yParentTranslated + NODE_HEIGHT / 2, xChildTranslated + NODE_WIDTH / 2, yChildTranslated + NODE_HEIGHT / 2, EDGE_COLOR, EDGE_WIDTH);
 	}
 }
-
-void drawNodes(std::vector<Node> tempNodeVector, ALLEGRO_FONT *subFont, std::vector<Edge> tempEdgeVector, int translateX, int translateY)
+void drawNodes(std::vector<Node> tempNodeVector,ALLEGRO_FONT *subFont, std::vector<Edge> tempEdgeVector, int translateX, int translateY)
 {
 /*
 Give this function:
@@ -137,7 +139,6 @@ And it will:
 		}
 	}
 }
-
 void ExportNodesEdges(std::vector<Node> tempNodeVector, std::vector<Edge> tempEdgeVector, std::string nodeFileName, std::string edgeFileName)
 {
 /*
@@ -175,7 +176,6 @@ And it will:
 		}
 	}
 }
-
 Node addNode(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, ALLEGRO_FONT *font, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, Node tempNode, int translateX, int translateY)
 {
 /*
@@ -191,14 +191,20 @@ And it will:
     - return the data for the newly defined node
 
 */	
+	int modX;
+
 	tempNode.x = events.mouse.x + translateX;
 	tempNode.y = events.mouse.y + translateY;
+
+	modX = (events.mouse.x + translateX) % BOX_SIZE;
+
+	if (modX < BOX_SIZE / 2) tempNode.x -= modX;
+	else tempNode.x += BOX_SIZE - modX;
 
 	if (nodeVector.size() > 0) tempNode.id = nodeVector[0].id + 1;
 	else tempNode.id = 0;
 	return tempNode;
 }
-
 Edge addEdge(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, ALLEGRO_FONT * subFont, int translateX, int translateY)
 {
 /*
@@ -208,7 +214,6 @@ Give this function:
      - an event queue that the Allegro library understands
      - an event that the Allegro library understands
      - font for the text    
-     - the data for a single node to be added
      - how far the user has already panned the image in the x and y direction
 And it will:
     - wait for the user to click and drag between nodes to define an edge
@@ -283,7 +288,6 @@ And it will:
 	}
 	return tempEdge;
 }
-
 std::vector<Node> moveChildren(std::vector<Node> nodeVector, std::vector<Edge> edgeVector, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, int translateX, int translateY)
 {	
 /*
@@ -299,10 +303,11 @@ And it will:
     - change the location of a node and its children nodes on the map based on click-drag-release input from the user's mouse
 
 */
+	events.type = 0;
 	int tempX, tempY, deltaX, deltaY; //integers to store coordinates of selected node and desired movement
 	bool nodeActivated = false;
 	std::vector<int> selectedNodes; //vector for storing id's of nodes to be moved
-
+	
 	while (events.type != ALLEGRO_EVENT_MOUSE_BUTTON_UP)
 	{
 		al_wait_for_event(event_queue, &events); //get input
@@ -360,19 +365,18 @@ And it will:
 
 	return nodeVector;
 }
-
-void drawMenu(int i)
+void drawMenu(int i, ALLEGRO_FONT *menuFont)
 {
 /*
 Give this function:
      - integer value of zero*
+	 - font for the text
 And it will:
     - draw a list of key commands to the map
 *I had a clever idea about using an integer to alter the list of commands, but gave up on it.  I never got around to dropping this functions requirement for an integer parameter
 
 */	
     
-    ALLEGRO_FONT *menuFont = al_load_font(FONT_TYPE, FONT_SIZE, NULL); //create a font for Allegro Display
 	int j = 0;
 	const char * nKey = "Add Node = N";
 	const char * eKey = "Add Edge = E";
@@ -418,7 +422,6 @@ And it will:
 		j++;
 	}
 }
-
 std::vector<Node> deleteNode(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, int translateX, int translateY)
 {
 /*
@@ -433,7 +436,7 @@ And it will:
     - if so, that node gets deleted from the node data
 
 */
-
+	events.type = 0;
 	int tempX, tempY, deltaX, deltaY; //integers to store coordinates of selected node and desired movement
 	bool nodeActivated = false;
 	int selectedNode; //vector for storing id's of nodes to be moved
@@ -480,7 +483,6 @@ And it will:
 
 	return nodeVector;
 }
-
 std::vector<Edge> deleteEdge(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_EVENT events, int translateX, int translateY)
 {
 /*
@@ -590,22 +592,23 @@ Give this function:
 And it will:
     - draw a series of concentric circles to the map
 
-*/	translateX = -translateX;
+*/	
+	translateX = -translateX;
 	translateY = -translateY;
-	float maxRadius = WINDOW_X * WINDOW_X + WINDOW_Y * WINDOW_Y;
-	maxRadius = sqrt(maxRadius);
-	int colored = 0;
-	for (float radius = maxRadius; radius > 0; radius = radius - maxRadius / DIVISIONS)
-	{
-		if (colored == 1)
+	float maxRadius = WINDOW_X * 10;
+	//maxRadius = sqrt(maxRadius);
+	bool colored = false;
+	for (int x = 0; x < maxRadius; x += BOX_SIZE)
+	{	
+		if (colored)
 		{
-			al_draw_filled_circle(translateX, translateY + WINDOW_Y, radius, al_map_rgb(255, 255, 255));
-			colored = 0;
+			//al_draw_filled_rectangle(x - translateX, y - translateY, x - translateX + BOX_SIZE, y - translateY + BOX_SIZE, al_map_rgb(255, 255, 255));
+			colored = false;
 		}
 		else
 		{
-			al_draw_filled_circle(translateX, translateY + WINDOW_Y, radius, al_map_rgb(249, 242, 255));
-			colored = 1;
+			al_draw_filled_rectangle(x + translateX, -maxRadius, x + translateX + BOX_SIZE, WINDOW_Y, al_map_rgb(249, 242, 255));
+			colored = true;
 		}
 	}
 }
@@ -823,6 +826,169 @@ And it will:
 					interrogateNodeVector.push_back(nodeBuffer);
 				}
 			}
+		}
+	}
+}
+std::vector<nodeTransition> parentTransition(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, Node selectedNode)
+{
+	std::vector<nodeTransition> prTrVec;
+	std::vector<int> nodeIds;
+	nodeTransition tempTr;
+	for (int i = 0; i < edgeVector.size(); i++) //iterate through edge vector to find all parent nodes
+	{
+		if (edgeVector[i].child == selectedNode.id)
+		{
+			nodeIds.push_back(edgeVector[i].parent);
+		}
+	}
+	for (int k = 0; k < nodeVector.size(); k++) //iterate through node vector, compare with list of parent node ids, record in nodeTransition vector
+	{
+		for (int j = 0; j < nodeIds.size(); j++)
+		{
+			if (nodeIds[j] == nodeVector[k].id)
+			{
+				tempTr.originalX = nodeVector[k].x;
+				tempTr.originalY = nodeVector[k].y;
+				tempTr.updatedX = selectedNode.x + PARENT_OFFSET;
+				tempTr.updatedY = selectedNode.y - j * NODE_HEIGHT * 2;
+				tempTr.id = nodeIds[j];
+				prTrVec.push_back(tempTr);
+			}
+		}
+	}
+	return prTrVec;
+}
+std::vector<nodeTransition> childTransition(std::vector<Node> &nodeVector, std::vector<Edge> &edgeVector, Node selectedNode)
+{
+	std::vector<nodeTransition> prTrVec;
+	std::vector<int> nodeIds;
+	nodeTransition tempTr;
+	for (int i = 0; i < edgeVector.size(); i++) //iterate through edge vector to find all parent nodes
+	{
+		if (edgeVector[i].parent == selectedNode.id)
+		{
+			nodeIds.push_back(edgeVector[i].child);
+		}
+	}
+	for (int k = 0; k < nodeVector.size(); k++) //iterate through node vector, compare with list of parent node ids, record in nodeTransition vector
+	{
+		for (int j = 0; j < nodeIds.size(); j++)
+		{
+			if (nodeIds[j] == nodeVector[k].id)
+			{
+				tempTr.originalX = nodeVector[k].x;
+				tempTr.originalY = nodeVector[k].y;
+				tempTr.updatedX = selectedNode.x + CHILD_OFFSET;
+				tempTr.updatedY = selectedNode.y - j * NODE_HEIGHT * 2;
+				tempTr.id = nodeIds[j];
+				prTrVec.push_back(tempTr);
+			}
+		}
+	}
+	return prTrVec;
+}
+void copyVectors(std::vector<Node> &origNode, std::vector<Node> &copyNode, std::vector<Edge> &origEdge, std::vector<Edge> &copyEdge)
+{
+	copyNode = origNode;
+	copyEdge = origEdge;
+}
+void undoChange(std::vector<Node> &origNode, std::vector<Node> &copyNode, std::vector<Edge> &origEdge, std::vector<Edge> &copyEdge)
+{
+	origNode = copyNode;
+	origEdge = copyEdge;
+}
+std::vector<button> createButtons(std::vector<const char *> btnNames)
+{
+	int startingCoordX, startingCoordY;
+	int const numBtns = 7;
+	button btnBuffer;
+	startingCoordX = WINDOW_X - BTN_WIDTH - BTN_HEIGHT;
+	startingCoordY = BTN_HEIGHT;
+	std::vector<button> btnVec;
+	
+	for (int i = 0; i < numBtns; i++)
+	{
+		btnBuffer.text = btnNames[i];
+		btnBuffer.yCoord = startingCoordY + i * (BTN_HEIGHT + NODE_HEIGHT);
+		btnBuffer.xCoord = startingCoordX;
+		btnVec.push_back(btnBuffer);
+	}
+	return btnVec;
+	
+}
+void drawButtons(std::vector<button> buttons, ALLEGRO_FONT *btnFont, int clickedBtnIndex, std::vector<const char *> btnNames)
+{
+	int textOffset = (BTN_HEIGHT - FONT_SIZE) / 2;
+	for (int i = 0; i < buttons.size(); i++)
+	{
+		if (i == clickedBtnIndex)
+		{
+			al_draw_filled_rectangle(buttons[i].xCoord,
+									buttons[i].yCoord,
+									buttons[i].xCoord + BTN_WIDTH,
+									buttons[i].yCoord + BTN_HEIGHT,
+									CLICKED_BTN_COLOR);
+
+			al_draw_text(btnFont, BTN_COLOR, buttons[i].xCoord + textOffset, buttons[i].yCoord + textOffset, NULL, btnNames[i]);
+		}
+		else 
+		{
+			al_draw_filled_rectangle(buttons[i].xCoord,
+									buttons[i].yCoord,
+									buttons[i].xCoord + BTN_WIDTH,
+									buttons[i].yCoord + BTN_HEIGHT,
+									BTN_COLOR);
+			al_draw_text(btnFont, FONT_COLOR, buttons[i].xCoord + textOffset, buttons[i].yCoord + textOffset, NULL, btnNames[i]);
+		}
+
+	}
+}
+void drawScreen(int translateX, int translateY, ALLEGRO_FONT *font, char const * message, std::vector<Node> nodeVector, std::vector<Edge> edgeVector, ALLEGRO_FONT * subFont, std::vector<button> buttons, ALLEGRO_FONT *btnFont, int clickedBtnIndex, std::vector<const char *> btnNames)
+{
+	al_clear_to_color(WINDOW_COLOR);
+	drawBackground(translateX, translateY);
+	al_draw_text(font, FONT_COLOR, 0, 0, 0, message);
+	drawEdges(nodeVector, edgeVector, translateX, translateY);
+	drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
+	drawButtons(buttons, btnFont, clickedBtnIndex, btnNames);
+	al_flip_display();
+}
+void drawScreen(int translateX, int translateY, ALLEGRO_FONT *font, std::vector<Node> nodeVector, std::vector<Edge> edgeVector, ALLEGRO_FONT * subFont, std::vector<button> buttons, ALLEGRO_FONT *btnFont, int clickedBtnIndex, std::vector<const char *> btnNames)
+{
+	al_clear_to_color(WINDOW_COLOR);
+	drawBackground(translateX, translateY);
+//	al_draw_text(font, FONT_COLOR, 0, 0, 0, NULL);
+	drawEdges(nodeVector, edgeVector, translateX, translateY);
+	drawNodes(nodeVector, subFont, edgeVector, translateX, translateY);
+	drawButtons(buttons, btnFont, clickedBtnIndex, btnNames);
+	al_flip_display();
+}
+void openDocument(ALLEGRO_EVENT events, int translateX, int translateY, std::vector<Node> &nodeVector, int &activeNode, ALLEGRO_EVENT_QUEUE * event_queue)
+{
+	events.type = 0;
+	int tempX, tempY;
+	bool nodeActivated = false;
+	while (events.type != ALLEGRO_EVENT_MOUSE_BUTTON_UP)
+	{
+		al_wait_for_event(event_queue, &events);
+		if (events.mouse.button & 1) //check for a right click event
+		{
+			//store coordinates of mouse 
+			tempX = events.mouse.x + translateX;
+			tempY = events.mouse.y + translateY;
+
+			//check if a document node was clicked
+			for (int i = 0; i < nodeVector.size(); i++)
+			{
+				if (tempX > nodeVector[i].x && tempX < nodeVector[i].x + NODE_WIDTH && tempY > nodeVector[i].y && tempY < nodeVector[i].y + NODE_HEIGHT && nodeVector[i].type == "Document")
+				{
+					nodeActivated = true;
+					activeNode = i;
+					al_clear_to_color(WINDOW_COLOR);
+					al_flip_display();
+				}
+			}
+
 		}
 	}
 }
