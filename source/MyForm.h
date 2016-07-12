@@ -392,7 +392,7 @@ namespace knowledgeForm {
 			this->Controls->Add(this->menuStrip1);
 			this->MainMenuStrip = this->menuStrip1;
 			this->Name = L"MyForm";
-			this->Text = L"KM War Room";
+			this->Text = L"Tacitus - Home";
 			this->menuStrip1->ResumeLayout(false);
 			this->menuStrip1->PerformLayout();
 			this->ResumeLayout(false);
@@ -496,7 +496,7 @@ private: System::Void networkToolStripMenuItem_Click(System::Object^  sender, Sy
 	al_set_new_display_flags(ALLEGRO_WINDOWED);
 	ALLEGRO_DISPLAY *display = al_create_display(WINDOW_X, WINDOW_Y);
 	al_set_window_position(display, DISPLAY_POSITION_X, DISPLAY_POSITION_Y);
-	al_set_window_title(display, WINDOW_TITLE);
+	al_set_window_title(display, "Tacitus - Network");
 
 	// check that display was successfully created
 	if (!display)
@@ -1029,7 +1029,7 @@ private: System::Void listToolStripMenuItem_Click(System::Object^  sender, Syste
 	al_set_new_display_flags(ALLEGRO_WINDOWED);
 	ALLEGRO_DISPLAY *display = al_create_display(WINDOW_X, WINDOW_Y);
 	al_set_window_position(display, DISPLAY_POSITION_X, DISPLAY_POSITION_Y);
-	al_set_window_title(display, WINDOW_TITLE);
+	al_set_window_title(display, "Tacitus - List");
 
 	// check that display was successfully created
 	if (!display)
